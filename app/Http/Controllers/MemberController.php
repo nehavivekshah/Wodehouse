@@ -128,7 +128,13 @@ class MemberController extends Controller
             ]);
         }
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'cart_count' => auth()->user()->cartItems()->sum('quantity'),
+            'cart_total' => auth()->user()->cartItems()->get()->sum(function ($item) {
+                return $item->quantity * $item->food->price;
+            })
+        ]);
     }
 
     public function update(Request $request)
@@ -137,13 +143,42 @@ class MemberController extends Controller
         if ($item) {
             $item->update(['quantity' => $request->quantity]);
         }
-        return response()->json(['success' => true]);
+
+
+        $item->refresh(); // reload to get new quantity if needed
+        $cartItems = auth()->user()->cartItems()->with('food')->get();
+        $subtotal = $cartItems->sum(function ($i) {
+            return $i->quantity * $i->food->price; });
+        $gst = $subtotal * 0.18;
+        $total = $subtotal + $gst;
+
+        return response()->json([
+            'success' => true,
+            'item_total' => $item ? $item->quantity * $item->food->price : 0,
+            'subtotal' => $subtotal,
+            'gst' => $gst,
+            'total' => $total
+        ]);
     }
 
     public function remove(Request $request)
     {
         CartItem::where('id', $request->id)->where('user_id', auth()->id())->delete();
-        return response()->json(['success' => true]);
+        CartItem::where('id', $request->id)->where('user_id', auth()->id())->delete();
+
+        $cartItems = auth()->user()->cartItems()->with('food')->get();
+        $subtotal = $cartItems->sum(function ($i) {
+            return $i->quantity * $i->food->price; });
+        $gst = $subtotal * 0.18;
+        $total = $subtotal + $gst;
+
+        return response()->json([
+            'success' => true,
+            'subtotal' => $subtotal,
+            'gst' => $gst,
+            'total' => $total,
+            'cart_count' => $cartItems->sum('quantity') // Useful if we update header/badges
+        ]);
     }
 
     public function checkout()

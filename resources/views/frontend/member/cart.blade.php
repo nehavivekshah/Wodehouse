@@ -26,57 +26,54 @@
                         </thead>
 
                         <tbody>
-                        @php $subtotal = 0; @endphp
+                            @php $subtotal = 0; @endphp
 
-                        @forelse($cartItems as $item)
-                            @php
-                                $itemTotal = $item->quantity * $item->food->price;
-                                $subtotal += $itemTotal;
-                            @endphp
+                            @forelse($cartItems as $item)
+                                @php
+                                    $itemTotal = $item->quantity * $item->food->price;
+                                    $subtotal += $itemTotal;
+                                @endphp
 
-                            <tr data-id="{{ $item->id }}">
-                                <td>
-                                    <div class="d-flex align-items-center p-2">
-                                        <img src="{{ $item->food->image }}"
-                                             class="img-fluid rounded me-3"
-                                             style="width:80px;height:60px;object-fit:cover">
-                                        <div>
-                                            <h6 class="mb-0">{{ $item->food->name }}</h6>
-                                            <small class="text-muted">
-                                                {{ $item->food->category ?? 'Food Item' }}
-                                            </small>
+                                <tr id="row-{{ $item->id }}" data-id="{{ $item->id }}">
+                                    <td>
+                                        <div class="d-flex align-items-center p-2">
+                                            <img src="{{ $item->food->image }}" class="img-fluid rounded me-3"
+                                                style="width:80px;height:60px;object-fit:cover">
+                                            <div>
+                                                <h6 class="mb-0">{{ $item->food->name }}</h6>
+                                                <small class="text-muted">
+                                                    {{ $item->food->category ?? 'Food Item' }}
+                                                </small>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
 
-                                <td class="text-center">
-                                    <div class="input-group" style="width:140px;margin:auto;">
-                                        <button class="btn btn-outline-secondary btn-sm qty-minus">-</button>
-                                        <input type="text"
-                                               class="form-control form-control-sm text-center qty-input"
-                                               value="{{ $item->quantity }}"
-                                               readonly>
-                                        <button class="btn btn-outline-secondary btn-sm qty-plus">+</button>
-                                    </div>
-                                </td>
+                                    <td class="text-center">
+                                        <div class="input-group" style="width:140px;margin:auto;">
+                                            <button class="btn btn-outline-secondary btn-sm qty-minus">-</button>
+                                            <input type="text" class="form-control form-control-sm text-center qty-input"
+                                                value="{{ $item->quantity }}" readonly>
+                                            <button class="btn btn-outline-secondary btn-sm qty-plus">+</button>
+                                        </div>
+                                    </td>
 
-                                <td class="text-end fw-bold">
-                                    ₹ {{ number_format($itemTotal, 2) }}
-                                </td>
+                                    <td class="text-end fw-bold">
+                                        ₹ {{ number_format($itemTotal, 2) }}
+                                    </td>
 
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-danger remove-item">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center py-4 text-muted">
-                                    Your cart is empty
-                                </td>
-                            </tr>
-                        @endforelse
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-danger remove-item">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">
+                                        Your cart is empty
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -100,17 +97,17 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between px-0">
                         <span>Subtotal</span>
-                        <span>₹ {{ number_format($subtotal, 2) }}</span>
+                        <span id="summ-subtotal">₹ {{ number_format($subtotal, 2) }}</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between px-0">
                         <span>GST (18%)</span>
-                        <span>₹ {{ number_format($gst, 2) }}</span>
+                        <span id="summ-gst">₹ {{ number_format($gst, 2) }}</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between px-0 fs-5 fw-bold">
                         <span>Total</span>
-                        <span class="text-accent">
+                        <span id="summ-total" class="text-accent">
                             ₹ {{ number_format($total, 2) }}
                         </span>
                     </li>
@@ -118,8 +115,7 @@
 
                 <div class="d-grid mt-4">
                     @if($subtotal > 0)
-                        <a href="{{ route('member.food.checkout') }}"
-                           class="btn btn-primary btn-lg">
+                        <a href="{{ route('member.food.checkout') }}" class="btn btn-primary btn-lg">
                             Proceed to Checkout
                         </a>
                     @else
@@ -137,55 +133,76 @@
 
 {{-- JS --}}
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
 
-    $('.qty-plus').click(function () {
-        let row = $(this).closest('tr');
-        updateQuantity(row, 1);
-    });
-
-    $('.qty-minus').click(function () {
-        let row = $(this).closest('tr');
-        updateQuantity(row, -1);
-    });
-
-    $('.remove-item').click(function () {
-        let row = $(this).closest('tr');
-        removeItem(row.data('id'));
-    });
-
-    function updateQuantity(row, change) {
-        let input = row.find('.qty-input');
-        let qty = parseInt(input.val()) + change;
-
-        if (qty < 1) return;
-
-        $.post("{{ route('member.food.cart.update') }}", {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            id: row.data('id'),
-            quantity: qty
-        }, function () {
-            location.reload();
+        $('.qty-plus').click(function () {
+            let row = $(this).closest('tr');
+            updateQuantity(row, 1);
         });
-    }
 
-    function removeItem(id) {
-        Swal.fire({
-            title: 'Remove item?',
-            text: 'This item will be removed from cart.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Remove'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("{{ route('member.food.cart.remove') }}", {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id
-                }, function () {
-                    location.reload();
-                });
-            }
+        $('.qty-minus').click(function () {
+            let row = $(this).closest('tr');
+            updateQuantity(row, -1);
         });
-    }
-});
+
+        $('.remove-item').click(function () {
+            let row = $(this).closest('tr');
+            removeItem(row.data('id'));
+        });
+
+        function updateQuantity(row, change) {
+            let input = row.find('.qty-input');
+            let qty = parseInt(input.val()) + change;
+
+            if (qty < 1) return;
+
+            $.post("{{ route('member.food.cart.update') }}", {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                id: row.data('id'),
+                quantity: qty
+            }, function (response) {
+                if (response.success) {
+                    input.val(qty);
+                    // Update item total
+                    row.find('.text-end.fw-bold').text('₹ ' + parseFloat(response.item_total).toFixed(2));
+
+                    // Update Summary
+                    updateSummary(response);
+                }
+            });
+        }
+
+        function removeItem(id) {
+            Swal.fire({
+                title: 'Remove item?',
+                text: 'This item will be removed from cart.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Remove'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post("{{ route('member.food.cart.remove') }}", {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        id: id
+                    }, function (response) {
+                        if (response.success) {
+                            $('#row-' + id).fadeOut(300, function () { $(this).remove(); });
+                            // Update Summary
+                            updateSummary(response);
+
+                            // If cart empty, reload to show empty state
+                            if (response.cart_count == 0 || response.total == 0) {
+                                setTimeout(() => location.reload(), 500);
+                            }
+                        }
+                    });
+                }
+        }
+
+        function updateSummary(response) {
+            $('#summ-subtotal').text('₹ ' + parseFloat(response.subtotal).toFixed(2));
+            $('#summ-gst').text('₹ ' + parseFloat(response.gst).toFixed(2));
+            $('#summ-total').text('₹ ' + parseFloat(response.total).toFixed(2));
+        }
+    });
 </script>

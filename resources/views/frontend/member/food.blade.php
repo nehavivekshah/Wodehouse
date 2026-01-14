@@ -233,7 +233,11 @@
                     timer: 1500,
                     timerProgressBar: true
                 });
-                // Optionally update cart count widget
+
+                // Update cart widget
+                if (response.success) {
+                    $('#cart-summary').text(response.cart_count + ' Items | ₹ ' + parseFloat(response.cart_total).toFixed(2));
+                }
             })
             .fail(function () {
                 Swal.fire({

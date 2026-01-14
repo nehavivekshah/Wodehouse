@@ -1,0 +1,350 @@
+:root{
+    --primary-color:#112014;
+    --accent-color: #7a967f;
+}
+.icon-box i {
+    font-size: 30px;
+    color: var(--accent-color);
+}
+header.main-header{
+    position:static;
+    max-width:100%;
+    background:#7a967f;
+    width: 100%;
+    margin: 0;
+}
+.navbar{
+    padding:5px 0;
+}
+.navbar-brand img {
+    width: 100px;
+}
+.header-btn{
+    margin-left:20px;
+}
+.header-btn a{
+    background:#fff;
+}
+.navbar-nav .nav-link{
+    text-shadow:2px 2px 3px #011b06;
+    padding:8px 12px !important;
+}
+.navbar-nav li ul li .nav-link{
+    padding:8px 20px 8px 20px !important;
+    color:#fff;
+}
+.main-menu ul ul{
+    z-index:999;
+}
+.navbar-nav .nav-link.active{
+    color:#fdf567;
+}
+.navbar-nav li li .nav-link{
+    text-shadow:none;
+}
+.our-services::before {
+    background: none;
+}
+.our-services::after {
+    background: none;
+}
+.our-faqs::before {
+    background: none;
+}
+.our-faqs::after {
+    background: none;
+}
+.about-us::before {
+    background: none;
+}
+.cta-box::before {
+    background: none;
+}
+.cta-box::after {
+    background: none;
+}
+.main-menu .nav-menu-wrapper {
+    text-align:end;
+    margin:0;
+}
+.our-approach::before {
+    background: none;
+}
+.our-approach::after {
+    background: none;
+}
+.page-header {
+    background: url('images/bnr.jpg') no-repeat !important;
+    background: none;
+    position: relative; 
+    background-position: center center;
+    background-size: cover !important;
+    padding: 215px 0 110px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+.hero.hero-slider-layout .hero-slide{
+    padding-bottom:20px;
+    min-height:calc(100vh - 130px);
+}
+.hero.hero-slider-layout .hero-slide::before{
+    display:none;
+}
+.hero .section-title h3{
+    text-shadow:2px 2px 3px #fecb09;
+}
+.hero h1{
+    text-shadow:2px 2px 3px #011b06;
+}
+.hero-benefit-item{
+    background:#1d5127;
+    padding-bottom:20px;
+    padding-left:20px;
+    padding-top:20px;
+    padding-right:80px;
+}
+.border-img{ 
+    border-radius: 10px;
+}
+.left-menu{
+    text-align: end !important;
+}
+.right-menu{
+    text-align: start !important;
+}
+.menu-home a{
+    padding: 15px 20px 15px 0px !important;
+}
+.our-facts{
+    background:#7a967f;
+    padding:0;
+}
+.main-footer{
+    background:#7a967f;
+    padding-top:50px;
+}
+.footer-copyright{
+    padding:15px 0;
+    margin-top:50px;
+}
+.about-us,.why-choose-us,.our-faqs,.our-approach{
+    padding:50px 0;
+}
+.our-services{
+    padding:50px 0 20px 0;
+}
+.section-row{
+    margin-bottom:20px;
+}
+.section-footer-text{
+    margin-top:0;
+}
+.section-title{
+    margin-bottom:20px;
+}
+.about-us-body-item{
+    margin-bottom:15px;
+}
+.about-us-btn{
+    margin-top:20px;
+}
+.dark-section .btn-default{
+    background:#fff;
+}
+.why-choose-box-2{
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 1px 1px 5px 1px #7a967f;
+}
+.why-choose-item .icon-box{
+    margin-bottom:10px;
+}
+.service-image img{
+    aspect-ratio:auto;
+}
+.footer-links ul li{
+    text-transform: none;
+}
+.facts-counter-box{
+    padding:10px 0;
+    margin:20px 0;
+}
+.our-facts-btn{
+    margin-top:30px;
+}
+.our-facts-image{
+    margin:0;
+}
+.our-facts-image img,.approach-img-1 figure img,.faqs-img-2 figure img{
+    aspect-ratio:auto;
+}
+.approach-img-2{
+    max-width:430px;
+}
+.approach-item-content p{
+    color:var(--text-color);
+}
+.hero .hero-content .section-title{
+    margin:0;
+}
+.hero .hero-content h1{
+    margin-top:10%;
+    font-size:50px;
+    background:#7a967f75;
+    display:inline-block;
+    padding:10px 20px;
+    border-radius:5px;
+}
+@media (max-width:1560px){
+    .navbar-expand-lg .navbar-collapse{
+        padding-right:120px;
+    }
+}
+.section-title{
+    margin-bottom: 0px;
+}
+.section-space {
+    padding: 50px 0;
+}
+.section-bg{
+    background-color: #7a967f;
+}
+.table-style th{
+    background-color: #7a967f;
+    color: #fff;
+}
+.nav-item .nav-link:hover{
+    color: #fff;
+}
+.login-card{
+    background: #fff;
+    padding: 40px;
+    border-radius: 5px;
+    /* border: 1px solid #7a967f; */
+    box-shadow: 0px 1px 5px #7a967f;
+}
+.page-contact-us{
+    padding: 50px 0;
+}
+.login-page{
+    background-color: #7a967f1a;
+}
+.btn-login{
+    background-color: #7a967f;
+    color: #fff;
+    font-weight: 600;
+}
+.btn-login:hover{
+    background-color: #000;
+    color: #fff;
+    font-weight: 600;
+}
+.login-card label{
+    color: #000;  
+}
+.form-check label a {
+    color: #000;
+    font-weight: 600;
+}
+.login-card a{
+    color: #000;
+    font-weight: 600;
+}
+.form-check-input{
+    border:1px solid #7a967f;
+}
+.login-card h3{
+    text-align: center;
+}
+.login-card p{
+    text-align: center;
+}
+.page-blog{
+    padding: 50px 0;
+}
+@media(max-width:768px){
+    .our-facts{
+        padding: 15px;
+    }
+    .page-header{
+        padding: 80px 0 60px;
+    }
+}
+.slicknav_icon .slicknav_icon-bar{
+    background-color: #ffffff;
+}
+.footer-links ul li::marker{
+    color:#fff;
+}
+.footer-links ul li:hover a{
+    color: #fff;
+} 
+.footer-menu ul li a:hover{
+    color: #fff;
+}
+.btn-default{
+    padding:15px 30px;
+}
+.btn-default::before{
+    display:none;
+}
+.main-content {
+    background-color: #f4f4f4;
+    padding: 60px 0;
+    text-align: center;
+}
+.event-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f2f5;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    border: 1px solid #eaeaea;
+    margin: 20px auto;
+}
+.event-details {
+    display: flex;
+    align-items: center;
+}
+.date-box {
+    text-align: center;
+    margin-right: 25px;
+}
+.date-box .day {
+    background-color: #7a967f;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 8px 15px;
+}
+.date-box .day sup{
+    font-size:10px;
+}
+.date-box .year {
+    background-color: #eaeaea;
+    color: #333;
+    padding: 5px 15px;
+    font-size: 16px;
+}
+.date-box .month{
+    font-size:15px;
+}
+.event-title {
+    font-size: 20px;
+    color: #7a967f;
+    font-weight: bold;
+}
+.download-section {
+    text-align: center;
+}
+.download-section p {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+.download-section .pdf-icon {
+    width: 40px;
+    height: auto;
+}

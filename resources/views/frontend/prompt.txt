@@ -1,0 +1,1586 @@
+Core Features
+2.1. Module: User & Member Management
+2.1.1. JWT/Sanctum Authentication
+
+User Registration (Mobile & Email verification via OTP).
+
+Login/Logout functionality.
+
+Password reset flow.
+
+Token-based authentication for all subsequent API requests.
+2.1.2. Comprehensive Profile Management
+
+View and edit personal details (Name, Contact, Email).
+
+Profile picture upload (integration with cloud storage like S3 or DigitalOcean Spaces).
+
+Digital Membership ID Card: A dedicated screen within the app displaying a QR code and member details. This QR code can be scanned at club entry or for verification.
+2.1.3. History & Tracking
+
+Paginated list of all past and upcoming facility bookings.
+
+Order history for F&B purchases.
+
+Payment transaction history with filters.
+2.2. Module: Facility & Event Management (Admin-Focused)
+2.2.1. Facility Management (Admin Dashboard)
+
+CRUD (Create, Read, Update, Delete) operations for facilities (e.g., Tennis Court 1, Olympic Pool, Squash Court).
+
+Define operating hours, slot duration (e.g., 60 mins), and maintenance schedules.
+2.2.2. Event Management (Admin Dashboard)
+
+Create events with title, description, image, date, time, capacity, and fee.
+
+Publish/Unpublish events to the mobile app and website.
+
+View list of members registered for an event.
+2.3. Module: Game Booking System
+2.3.1. Discovery & Availability
+
+User selects a date and facility type.
+
+The app displays available time slots in a grid UI.
+
+Real-time Availability API: A dedicated, optimized API endpoint that queries the MS SQL Server database to check member status and the MySQL bookings table to check for conflicts, returning available slots in real-time.
+2.3.2. Booking Flow
+
+User selects an available slot.
+
+System calculates charge (if any) based on member type and time.
+
+User proceeds to a secure Razorpay payment page (if payment is required).
+
+Upon successful payment, a booking is created, and a confirmation notification is sent.
+2.3.3. Booking Modifications
+
+Users can view "My Bookings".
+
+Cancellation allowed based on a predefined cancellation policy (e.g., free cancellation up to 12 hours prior). Refunds are processed via Razorpay if applicable.
+2.4. Module: Food & Beverage (F&B)
+2.4.1. Dynamic Menu
+
+Admin can manage menu categories and items (name, description, price, image, availability status) from the dashboard.
+
+The app fetches the active menu via API.
+2.4.2. Ordering System
+
+Users add items to a cart.
+
+Checkout process with order summary.
+
+Integration with Razorpay for payment.
+
+Order confirmation sent to the kitchen/bar system (via email/API) and user.
+2.5. Module: Payment Integration (Razorpay)
+2.5.1. Payment Processing
+
+Secure collection of payment details via Razorpay's checkout modal.
+
+Handling of successful and failed payments.
+2.5.2. Webhook & Callback Handling
+
+A secure webhook endpoint in Laravel to receive payment status updates from Razorpay (e.g., payment.captured, payment.failed). This ensures database records are updated even if the user closes the app mid-process.
+2.5.3. Automated Invoice Generation
+
+Upon successful payment, a PDF invoice is automatically generated (using libraries like laravel-dompdf).
+
+Invoices are stored against the user's record and are downloadable from the "History" section.
+
+Advanced Integrations & Special Features
+3.1. WhatsApp Business API Integration
+
+Use Cases:
+Booking confirmations and reminders (24h before slot).
+Payment receipts and invoice links.
+Event reminders and updates.
+Broadcast messages for news/offers (opt-in required).
+3.2. Legacy System Integration (.NET & MS SQL)
+
+Develop a dedicated set of read-only APIs within the Laravel backend to communicate with the existing MS SQL Server database.
+
+Purpose: To validate active membership status and check real-time booking locks from the legacy system before confirming a new booking in the primary MySQL database.
+3.3. Monthly Billing Automation
+
+Implement Laravel Scheduled Commands (Cron Jobs).
+
+On a specified day each month, the system will:
+
+Identify members with auto-debit subscriptions.
+
+Generate invoices for fixed monthly charges.
+
+Trigger automatic payment collection via Razorpay's Subscription or Tokenization features.
+
+Send payment success/failure notifications via Email/WhatsApp.
+3.4. News & Updates Management (CRUD)
+
+Admin dashboard section to create and publish news articles and updates.
+
+Articles are displayed in a dedicated "News Feed" within the mobile app.
+
+Option to send push notifications for critical announcements.
+according to above system development, members required below pages to design as frontend->>
+Member Portal / App — Pages After Login
+
+Dashboard / Home
+Purpose: Central landing page after login
+Key UI elements:
+Welcome message and profile summary
+Quick links: “Book a Facility”, “Order Food”, “My Bookings”, “My Orders”, “Events”
+Upcoming bookings/events summary
+Latest news/announcements
+Shortcut to digital membership card (QR)
+
+Profile & Account Management
+2.1. My Profile
+View/edit personal details: Name, Email, Phone, Address
+Upload/change profile picture
+Membership ID, type, status, validity
+View Digital Membership Card (QR code)
+2.2. Change Password / Security Settings
+Change password
+Manage login devices (optional)
+2.3. Notifications & Preferences
+Toggle WhatsApp, Email, and Push notification preferences
+Opt-in/out of broadcast messages
+
+Facility Booking System
+3.1. Facility List / Discovery Page
+List of available facilities (Tennis, Squash, Pool, etc.)
+Filter by type, availability, or location
+3.2. Availability Page (for selected facility)
+Calendar view or date picker
+Grid/time-slot view for available slots
+Real-time availability API integration
+3.3. Booking Confirmation Page
+Slot summary, charges, and terms
+Proceed to payment (Razorpay integration)
+Post-payment: success/failure screen with booking ID
+3.4. My Bookings
+Tabs: Upcoming | Past | Cancelled
+Each entry: facility, time, status, payment info
+Option to view booking details or cancel
+Cancellation policy display
+
+Food & Beverage (F&B) System
+4.1. Menu Browser
+Category-wise listing (Starters, Beverages, Main Course, etc.)
+Item details: image, description, price, availability
+4.2. Cart
+List of selected items
+Modify quantities / remove items
+View total and taxes
+4.3. Checkout
+Confirm order details
+Payment through Razorpay
+Delivery type (table delivery / pickup, if applicable)
+4.4. Order Confirmation
+Order summary with unique ID
+Estimated preparation time
+4.5. My Orders
+Order history with filters (date/status)
+Order details: items, amount, payment, invoice link
+
+Events Module
+5.1. Events List
+Upcoming & past events
+Search/filter by date or category
+5.2. Event Details
+Title, description, date/time, image, fee, available seats
+Register/Book (if open)
+Payment flow (if fee applies)
+5.3. My Event Registrations
+View all registered events
+Event details, status (upcoming, attended, cancelled)
+
+Payments & Billing
+6.1. Payment History
+All past payments (bookings, orders, events, subscriptions)
+Filter by date, type, or status
+6.2. Invoices
+List of downloadable PDF invoices
+Invoice details view (on click)
+6.3. Subscriptions (if applicable)
+View current subscription plan
+Auto-debit status, next billing date
+Manage payment method (via Razorpay tokenization)
+
+Notifications Center
+Consolidated list of system notifications
+Booking confirmations
+Event reminders
+Payment receipts
+News announcements
+
+Logout
+Simple logout and session termination
+
+existing public facing site use same layouting for members required pages->>
+header.php->
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="WEBbrella Infotech">
+        <!-- Page Title -->
+        <title>WODEHOUSE GYMKHANA</title>
+        <!-- Favicon Icon -->
+        <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png">
+        <!-- Google Fonts Css-->
+        <link rel="preconnect" href="https://fonts.googleapis.com/">
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com/"
+            crossorigin="crossorigin">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&amp;display=swap"
+            rel="stylesheet">
+        <!-- Bootstrap Css -->
+        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <!-- SlickNav Css -->
+        <link href="css/slicknav.min.css" rel="stylesheet">
+        <!-- Swiper Css -->
+        <link rel="stylesheet" href="css/swiper-bundle.min.css">
+        <!-- Font Awesome Icon Css-->
+        <link href="css/all.min.css" rel="stylesheet" media="screen">
+        <!-- Animated Css -->
+        <link href="css/animate.css" rel="stylesheet">
+        <!-- Magnific Popup Core Css File -->
+        <link rel="stylesheet" href="css/magnific-popup.css">
+        <!-- Mouse Cursor Css File -->
+        <link rel="stylesheet" href="css/mousecursor.css">
+        <!-- Main Custom Css -->
+        <link href="css/custom.css" rel="stylesheet" media="screen">
+        <link href="custom.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <!-- Preloader Start -->
+        <div class="preloader d-none">
+            <div class="loading-container">
+                <div class="loading"></div>
+                <div id="loading-icon"><img src="images/loader.svg" alt=""></div>
+            </div>
+        </div>
+        <!-- Preloader End -->
+        <!-- Header Start -->
+        <header class="main-header">
+            <div class="header-sticky">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container">
+                        <!-- Logo Start -->
+                        <a class="navbar-brand" href="index.php">
+                            <img src="images/favicon.png" alt="Logo">
+                        </a>
+                        <!-- Logo End -->
+                        <!-- Main Menu Start -->
+                        <div class="collapse navbar-collapse main-menu position-relative">
+                            <div class="nav-menu-wrapper">
+                                <ul class="navbar-nav mr-auto" id="menu">
+                                    <li class="nav-item submenu">
+                                        <a class="nav-link" href="index.php">Home</a>
+                                    </li>
+                                    <li class="nav-item submenu">
+                                        <a class="nav-link" href="about-us.php">About Us</a>
+                                    </li>
+                                    <li class="nav-item submenu">
+                                        <a class="nav-link" href="">Sports</a>
+                                        <ul>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="tennis.php">Tennis</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="billiards.php">Billiards</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="functional-training.php">Funtional Training</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="table-tennis.php">Table Tennis</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="card-room.php">Card Room</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="childrens-play-area.php">Children's Play Area</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- <li class="nav-item"><a class="nav-link"
+                                    href="services.html">Sports</a></li> -->
+                                    <li class="nav-item submenu">
+                                        <a class="nav-link" href="">Facilities</a>
+                                        <ul>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="wodehouse-chambers.php">Wodehouse Chamber's</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="wodehouse-lounge.php">Wodehouse Lounge</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="wodehouse-courtyard.php">Wodehouse Courtyard</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="dining-bar.php">Dining & Bar</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="events.php">Events</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="blogs.php">Blogs</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="gymkhana-affiliation.php">Gymkhana Affiliation</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="contact-us.php">Contact Us</a>
+                                    </li>
+                                    <li class="nav-item submenu">
+                                        <a class="nav-link" href="">Notices</a>
+                                        <ul>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="agm.php">AGM</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Annual Report</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- Header Btn Start -->
+                                    <div class="header-btn">
+                                        <a href="login.php" class="btn-default btn-highlighted">Login</a>
+                                    </div>
+                                    <!-- Header Btn End -->
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Main Menu End -->
+                        <div class="navbar-toggle"></div>
+                    </div>
+                </nav>
+                <div class="responsive-menu"></div>
+            </div>
+        </header>
+        <!-- Header End -->
+index.php->
+<?php include("header.php"); ?>
+<!-- Hero Section Start -->
+<div class="hero hero-slider-layout bg-section dark-section parallaxie">
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <!-- Hero Slide Start -->
+            <div class="swiper-slide">
+                <div class="hero-slide">
+                    <!-- Slider Image Start -->
+                    <div class="hero-slider-image">
+                        <img src="images/hero-bg.jpg" alt="">
+                    </div>
+                    <!-- Slider Image End -->
+                    <div class="hero-section">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-lg-12">
+                                    <!-- Hero Content Start -->
+                                    <div class="hero-content text-center">
+                                        <div class="section-title">
+                                            <!-- <h3 class="wow fadeInUp"></h3> -->
+                                            <h1 class="text-anime-style-3">Welcome to Wodehouse Gymkhana</h1>
+                                        </div>
+                                        <!-- <div class="hero-btn wow fadeInUp" data-wow-delay="0.2s">
+                                            <a href="#" class="btn-default">Get Membership</a>
+                                        </div> -->
+                                    </div>
+                                    <!-- Hero Content End -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hero Slide End -->
+            <!-- Hero Slide Start -->
+            <div class="swiper-slide">
+                <div class="hero-slide">
+                    <!-- Slider Image Start -->
+                    <div class="hero-slider-image">
+                        <img src="images/hero-bg-2.jpg" alt="">
+                    </div>
+                    <!-- Slider Image End -->
+                    <div class="hero-section">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-lg-12">
+                                    <!-- Hero Content Start -->
+                                    <div class="hero-content text-center">
+                                        <div class="section-title">
+                                            <!-- <h3 class="wow fadeInUp"></h3> -->
+                                            <h1 class="text-anime-style-3">Welcome to Wodehouse Gymkhana</h1>
+                                        </div>
+                                        <!-- <div class="hero-btn wow fadeInUp" data-wow-delay="0.2s">
+                                            <a href="#" class="btn-default">Get Membership</a>
+                                        </div> -->
+                                    </div>
+                                    <!-- Hero Content End -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hero Slide End -->
+            <!-- Hero Slide Start -->
+            <div class="swiper-slide">
+                <div class="hero-slide">
+                    <!-- Slider Image Start -->
+                    <div class="hero-slider-image">
+                        <img src="images/hero-bg-3.jpg" alt="">
+                    </div>
+                    <!-- Slider Image End -->
+                    <div class="hero-section">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col-lg-12">
+                                    <!-- Hero Content Start -->
+                                    <div class="hero-content text-center">
+                                        <div class="section-title">
+                                            <!-- <h3 class="wow fadeInUp"></h3> -->
+                                            <h1 class="text-anime-style-3">Welcome to Wodehouse Gymkhana</h1>
+                                        </div>
+                                        <!-- <div class="hero-btn wow fadeInUp" data-wow-delay="0.2s">
+                                            <a href="#" class="btn-default">Get Membership</a>
+                                        </div> -->
+                                    </div>
+                                    <!-- Hero Content End -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hero Slide End -->
+        </div>
+    </div>
+</div>
+<!-- Hero Section End -->
+<!-- About Us Section Start -->
+<div class="about-us">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <img src="images/about-us-img-2.png" alt="" class="img-fluid border-img">
+                <!-- About Us Image Start -->
+                <div class="about-us-images d-none">
+                    <!-- About Us Image 2 Start -->
+                    <div class="about-us-img-1">
+                        <figure class="image-anime reveal">
+                            <img src="images/about-us-img-1.png" alt="">
+                        </figure>
+                    </div>
+                    <!-- About Us Image 2 End -->
+                    <!-- About Us Image 2 Start -->
+                    <div class="about-us-img-2">
+                        <figure class="image-anime reveal">
+                            <img src="images/about-us-img-2.png" alt="">
+                        </figure>
+                    </div>
+                    <!-- About Us Image 2 End -->
+                    <!-- Hero Contact Circle Start -->
+                    <div class="get-membership-circle">
+                        <a href="#">
+                            <img src="images/get-membership-circle.png" alt="">
+                        </a>
+                    </div>
+                    <!-- Hero Contact Circle End -->
+                </div>
+                <!-- About Us Image End -->
+            </div>
+            <div class="col-lg-8">
+                <!-- About Us Content Start -->
+                <div class="about-us-content">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Wodehouse Gymkhana</h3>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">The Gymkhana where history inspires your every moment</h2>
+                        <p class="wow fadeInUp" data-wow-delay="0.2s">A 115+ year old heritage Gymkhana
+                            in South Mumbai, Wodehouse Gymkhana blends sport, tradition, and a warm sense of
+                            belonging. Whether it's a casual cup of coffee on the lawns or a high-stakes
+                            game of bridge, this historic space continues to be a vibrant retreat for
+                            generations.</p>
+                    </div>
+                    <!-- Section Title End -->
+                    <!-- About Us Body Start -->
+                    <div class="about-us-body">
+                        <!-- About Us Body Item Start -->
+                        <div class="about-us-body-item wow fadeInUp" data-wow-delay="0.4s">
+                            <h3>Our Prestigious Legacy</h3>
+                            <p>Founded in 1909 and steeped in colonial history, Wodehouse Gymkhana has
+                                evolved from a British-only Gymkhana to a proudly Indian institution – rich with
+                                stories, tradition, and character.</p>
+                        </div>
+                        <!-- About Us Body Item End -->
+                        <!-- About Us Body Item Start -->
+                        <div class="about-us-body-item wow fadeInUp" data-wow-delay="0.6s">
+                            <h3>A Culture Beyond Sports</h3>
+                            <p>Beyond tennis, billiards, and table tennis, members enjoy seminars, live
+                                performances, stand-up acts, and social gatherings that turn every week into a
+                                celebration of life.</p>
+                        </div>
+                        <!-- About Us Body Item End -->
+                    </div>
+                    <!-- About Us Body End -->
+                    <!-- About Us Button Start -->
+                    <div class="about-us-btn wow fadeInUp" data-wow-delay="0.8s">
+                        <a href="about-us.php" class="btn-default">more about us</a>
+                    </div>
+                    <!-- About Us Button End -->
+                </div>
+                <!-- About Us Content End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About Us Section End -->
+<!-- Our Services Section Start -->
+<div class="our-services">
+    <div class="container">
+        <div class="row section-row align-items-center">
+            <div class="col-lg-6">
+                <!-- Section Title Start -->
+                <div class="section-title">
+                    <h3 class="wow fadeInUp">our facilities</h3>
+                    <h2 class="text-anime-style-3" data-cursor="-opaque">Our Gymkhana for every occasion</h2>
+                </div>
+                <!-- Section Title End -->
+            </div>
+            <div class="col-lg-6">
+                <!-- Section Button Start -->
+                <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                    <a href="#" class="btn-default">view all facilities</a>
+                </div>
+                <!-- Section Button End -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <!-- Service Item Start -->
+                <div class="service-item wow fadeInUp">
+                    <!-- Service Image Start -->
+                    <div class="service-image">
+                        <a href="#" data-cursor-text="View">
+                            <figure class="image-anime">
+                                <img src="images/service-1.png" alt="">
+                            </figure>
+                        </a>
+                    </div>
+                    <!-- Service Image End -->
+                    <!-- Service Content Start -->
+                    <div class="service-content">
+                        <div class="service-no">
+                            <h2>01</h2>
+                        </div>
+                        <div class="service-title">
+                            <h3>
+                                <a href="#">Sports Facilities</a>
+                            </h3>
+                        </div>
+                        <div class="service-btn">
+                            <a href="#"><img src="images/arrow-black.svg" alt=""></a>
+                        </div>
+                    </div>
+                    <!-- Service Content End -->
+                </div>
+                <!-- Service Item End -->
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- Service Item Start -->
+                <div class="service-item wow fadeInUp" data-wow-delay="0.2s">
+                    <!-- Service Image Start -->
+                    <div class="service-image">
+                        <a href="#" data-cursor-text="View">
+                            <figure class="image-anime">
+                                <img src="images/service-image-2.jpg" alt="">
+                            </figure>
+                        </a>
+                    </div>
+                    <!-- Service Image End -->
+                    <!-- Service Content Start -->
+                    <div class="service-content">
+                        <div class="service-no">
+                            <h2>02</h2>
+                        </div>
+                        <div class="service-title">
+                            <h3>
+                                <a href="#">Cultural Activities</a>
+                            </h3>
+                        </div>
+                        <div class="service-btn">
+                            <a href="#"><img src="images/arrow-black.svg" alt=""></a>
+                        </div>
+                    </div>
+                    <!-- Service Content End -->
+                </div>
+                <!-- Service Item End -->
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <!-- Service Item Start -->
+                <div class="service-item wow fadeInUp" data-wow-delay="0.4s">
+                    <!-- Service Image Start -->
+                    <div class="service-image">
+                        <a href="#" data-cursor-text="View">
+                            <figure class="image-anime">
+                                <img src="images/service-image-3.jpg" alt="">
+                            </figure>
+                        </a>
+                    </div>
+                    <!-- Service Image End -->
+                    <!-- Service Content Start -->
+                    <div class="service-content">
+                        <div class="service-no">
+                            <h2>03</h2>
+                        </div>
+                        <div class="service-title">
+                            <h3>
+                                <a href="#">Dining & Beverages</a>
+                            </h3>
+                        </div>
+                        <div class="service-btn">
+                            <a href="#"><img src="images/arrow-black.svg" alt=""></a>
+                        </div>
+                    </div>
+                    <!-- Service Content End -->
+                </div>
+                <!-- Service Item End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Our Services Section End -->
+<!-- Why Choose Us Section Start -->
+<div class="why-choose-us">
+    <div class="container">
+        <div class="row section-row align-items-center">
+            <div class="col-lg-6">
+                <!-- Section Title Start -->
+                <div class="section-title">
+                    <h3 class="wow fadeInUp">Why Choose Us</h3>
+                    <h2 class="text-anime-style-3" data-cursor="-opaque">Enjoy a smooth, hassle-free experience</h2>
+                </div>
+                <!-- Section Title End -->
+            </div>
+            <div class="col-lg-6">
+                <!-- Section Title Content Start -->
+                <div class="section-title-content wow fadeInUp" data-wow-delay="0.2s">
+                    <p>Experience the perfect blend of tradition and innovation at our Gymkhana. We
+                        bring you a modern, technology-driven platform that simplifies every aspect of
+                        your membership—from seamless facility bookings and personalized event
+                        management to effortless payments and exclusive member benefits.</p>
+                </div>
+                <!-- Section Title Content End -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Why Choose Box Start -->
+                <div class="why-choose-box-2">
+                    <!-- Why Choose Item Start -->
+                    <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="icon-box">
+                            <img src="images/access-control.png" alt="">
+                        </div>
+                        <div class="why-choose-item-content">
+                            <h3>Smart & Secure Access</h3>
+                            <p>Digital member ID with QR verification ensures fast and secure entry to
+                                Gymkhana facilities.</p>
+                        </div>
+                    </div>
+                    <!-- Why Choose Item End -->
+                </div>
+                <!-- Why Choose Box End -->
+            </div>
+            <div class="col-md-3">
+                <!-- Why Choose Box Start -->
+                <div class="why-choose-box-2">
+                    <!-- Why Choose Item Start -->
+                    <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="icon-box">
+                            <img src="images/online-booking.png" alt="">
+                        </div>
+                        <div class="why-choose-item-content">
+                            <h3>Real-Time Booking System</h3>
+                            <p>Instantly view and reserve available slots for sports, events, and more —
+                                anytime, anywhere.</p>
+                        </div>
+                    </div>
+                    <!-- Why Choose Item End -->
+                </div>
+                <!-- Why Choose Box End -->
+            </div>
+            <div class="col-md-3">
+                <!-- Why Choose Box Start -->
+                <div class="why-choose-box-2">
+                    <!-- Why Choose Item Start -->
+                    <div class="why-choose-item wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="icon-box">
+                            <img src="images/framework.png" alt="">
+                        </div>
+                        <div class="why-choose-item-content">
+                            <h3>Integrated F&B Ordering</h3>
+                            <p>Browse menus, place orders, and pay — all from your mobile device, hassle-free.</p>
+                        </div>
+                    </div>
+                    <!-- Why Choose Item End -->
+                </div>
+                <!-- Why Choose Box End -->
+            </div>
+            <div class="col-md-3">
+                <!-- Why Choose Box Start -->
+                <div class="why-choose-box-2">
+                    <!-- Why Choose Item Start -->
+                    <div class="why-choose-item wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="icon-box">
+                            <img src="images/bill.png" alt="">
+                        </div>
+                        <div class="why-choose-item-content">
+                            <h3>Automated Billing & Invoicing</h3>
+                            <p>Enjoy hassle-free monthly billing, instant invoice
+                                generation, and secure transactions.</p>
+                        </div>
+                    </div>
+                    <!-- Why Choose Item End -->
+                </div>
+                <!-- Why Choose Box End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Why Choose Us Section End -->
+<!-- Our Facts Section Start -->
+<div class="our-facts dark-section">
+    <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-1 order-2">
+            <!-- Our Facts Image Start -->
+            <div class="our-facts-image">
+                <figure>
+                    <img src="images/facts-image.png" alt="">
+                </figure>
+            </div>
+            <!-- Our Facts Image End -->
+        </div>
+        <div class="col-lg-6 order-lg-2 order-1">
+            <!-- Our Facts Content Start -->
+            <div class="our-facts-content py-5">
+                <!-- Section Title Start -->
+                <div class="section-title">
+                    <h3 class="wow fadeInUp">our-facts</h3>
+                    <h2 class="text-anime-style-3" data-cursor="-opaque">A legacy in every game, a story in every sip</h2>
+                    <p class="wow fadeInUp" data-wow-delay="0.2s">Discover key highlights of our
+                        Gymkhana, including a rich heritage spanning over a century, world-class
+                        facilities, exclusive member events, and a vibrant community – now digitally
+                        enhanced for your convenience.</p>
+                </div>
+                <!-- Section Title End -->
+                <!-- Fact Counter Box Start -->
+                <div class="facts-counter-box">
+                    <!-- Fact Counter Item Start -->
+                    <div class="fact-counter-item">
+                        <h2>
+                            <span class="counter">115</span>+</h2>
+                        <p>Years of Heritage</p>
+                    </div>
+                    <!-- Fact Counter Item End -->
+                    <!-- Fact Counter Item Start -->
+                    <div class="fact-counter-item">
+                        <h2>
+                            <span class="counter">20</span>+</h2>
+                        <p>Amazing Activities</p>
+                    </div>
+                    <!-- Fact Counter Item End -->
+                    <!-- Fact Counter Item Start -->
+                    <div class="fact-counter-item">
+                        <h2>
+                            <span class="counter">100</span>%</h2>
+                        <p>Digital Convenience</p>
+                    </div>
+                    <!-- Fact Counter Item End -->
+                </div>
+                <!-- Fact Counter Box End -->
+                <!-- Our Fact List Start -->
+                <div class="our-facts-list wow fadeInUp" data-wow-delay="0.4s">
+                    <ul>
+                        <li>Instant Facility Booking</li>
+                        <li>Live Event Alerts</li>
+                        <li>Quick F&B Orders</li>
+                        <li>Smart Billing & Payments</li>
+                    </ul>
+                </div>
+                <!-- Our Fact List End -->
+                <!-- Our Fact Button Start -->
+                <div class="our-facts-btn wow fadeInUp" data-wow-delay="0.6s">
+                    <a href="contact-us.php" class="btn-default btn-highlighted">contact us</a>
+                </div>
+                <!-- Our Fact Button End -->
+            </div>
+            <!-- Our Facts Content End -->
+        </div>
+    </div>
+</div>
+<!-- Our Facts Section End -->
+<!-- Our Faqs Section Start -->
+<div class="our-faqs">
+    <div class="container">
+        <div class="row section-row align-items-center">
+            <div class="col-lg-6">
+                <!-- Section Title Start -->
+                <div class="section-title">
+                    <h3 class="wow fadeInUp">fAQ's</h3>
+                    <h2 class="text-anime-style-3" data-cursor="-opaque">Frequently asked questions</h2>
+                </div>
+                <!-- Section Title End -->
+            </div>
+            <div class="col-lg-6">
+                <!-- Section Button Start -->
+                <!-- <div class="section-btn wow fadeInUp" data-wow-delay="0.2s">
+                    <a href="#" class="btn-default">view all FAQs</a>
+                </div> -->
+                <!-- Section Button End -->
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <!-- Our Faqs Images Start -->
+                <div class="faqs-images">
+                    <!-- Faqs Image Start -->
+                    <div class="faqs-img-1">
+                        <figure class="image-anime reveal">
+                            <img src="images/faqs-image-1.jpg" alt="">
+                        </figure>
+                        <!-- Need Help Box Start -->
+                        <div class="need-help-box wow fadeInUp">
+                            <div class="icon-box">
+                                <img src="images/icon-need-help.svg" alt="">
+                            </div>
+                            <div class="need-help-content">
+                                <h3>Got Questions? We're Here to Help!</h3>
+                            </div>
+                        </div>
+                        <!-- Need Help Box End -->
+                    </div>
+                    <!-- Faqs Image End -->
+                    <!-- Faqs Image Start -->
+                    <div class="faqs-img-2">
+                        <figure class="image-anime reveal">
+                            <img src="images/faqs-image-2.jpg" alt="">
+                        </figure>
+                    </div>
+                    <!-- Faqs Image End -->
+                </div>
+                <!-- Our Faqs Images End -->
+            </div>
+            <div class="col-lg-6">
+                <!-- FAQ Accordion Start -->
+                <div class="faq-accordion" id="faqaccordion">
+                    <!-- FAQ Item Start -->
+                    <div class="accordion-item wow fadeInUp" data-wow-delay="0.2s">
+                        <h2 class="accordion-header" id="heading2">
+                            <button
+                                class="accordion-button "
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse2"
+                                aria-expanded="false"
+                                aria-controls="collapse2">
+                                1. Can I book Gymkhana facilities online?
+                            </button>
+                        </h2>
+                        <div
+                            id="collapse2"
+                            class="accordion-collapse collapse show"
+                            aria-labelledby="heading2"
+                            data-bs-parent="#faqaccordion">
+                            <div class="accordion-body">
+                                <p>Yes! Our new Gymkhana Management System allows members to conveniently view
+                                    real-time availability and book facilities such as tennis courts, squash courts,
+                                    and event spaces directly through our website or mobile app. This ensures a
+                                    seamless and efficient booking experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item End -->
+                    <!-- FAQ Item Start -->
+                    <div class="accordion-item wow fadeInUp" data-wow-delay="0.4s">
+                        <h2 class="accordion-header" id="heading3">
+                            <button
+                                class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse3"
+                                aria-expanded="false"
+                                aria-controls="collapse3">
+                                2. How can I stay updated on Gymkhana events and activities?
+                            </button>
+                        </h2>
+                        <div
+                            id="collapse3"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="heading3"
+                            data-bs-parent="#faqaccordion">
+                            <div class="accordion-body">
+                                <p>Members can find a comprehensive list of upcoming events, workshops, and
+                                    social gatherings in the 'Events' section of our website and mobile app. We also
+                                    send out regular updates via email and WhatsApp, and push notifications for
+                                    critical announcements to ensure you never miss out.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item End -->
+                    <!-- FAQ Item Start -->
+                    <div class="accordion-item wow fadeInUp" data-wow-delay="0.6s">
+                        <h2 class="accordion-header" id="heading4">
+                            <button
+                                class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse4"
+                                aria-expanded="false"
+                                aria-controls="collapse4">
+                                3. Does the Gymkhana offer dining and beverage services?
+                            </button>
+                        </h2>
+                        <div
+                            id="collapse4"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="heading4"
+                            data-bs-parent="#faqaccordion">
+                            <div class="accordion-body">
+                                <p>Absolutely! Wodehouse Gymkhana is renowned for its delicious food and
+                                    relaxing bar. Our dynamic F&B menu is available through the mobile app, allowing
+                                    members to place orders for dine-in or takeaway with secure payment processing,
+                                    enhancing your culinary experience at the Gymkhana.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FAQ Item End -->
+                </div>
+                <!-- FAQ Accordion End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Our Faqs Section End -->
+<?php include("footer.php"); ?>
+footer.php->
+<!-- Footer Start -->
+<footer class="main-footer dark-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <!-- About Footer Start -->
+                <div class="about-footer">
+                    <!-- Footer Logo Start -->
+                    <div class="footer-logo">
+                        <h3 class="text-light">Overview</h3>
+                        <!-- <img src="images/footer-logo.svg" alt=""> -->
+                    </div>
+                    <!-- Footer Logo End -->
+                    <!-- About Footer Content Start -->
+                    <div class="about-footer-content">
+                        <p>
+                            Experience a century of elegance and modern convenience at Wodehouse Gymkhana. A
+                            premier boutique Gymkhana dedicated to sociability, world-class facilities, and
+                            memorable member experiences.</p>
+                    </div>
+                    <!-- About Footer Content End -->
+                    <!-- Footer Social Link Start -->
+                    <!-- <div class="footer-social-links"> <ul> <li><a href="#"><i class="fa-brands
+                    fa-pinterest-p"></i></a></li> <li><a href="#"><i class="fa-brands
+                    fa-x-twitter"></i></a></li> <li><a href="#"><i class="fa-brands
+                    fa-facebook-f"></i></a></li> <li><a href="#"><i class="fa-brands
+                    fa-instagram"></i></a></li> </ul> </div> -->
+                    <!-- Footer Social Link End -->
+                </div>
+                <!-- About Footer End -->
+            </div>
+            <div class="col-lg-3 col-md-4">
+                <!-- Footer Links Start -->
+                <div class="footer-contact-details footer-links">
+                    <h3>Say Hello</h3>
+                    <ul>
+                        <li>
+                            <a href="tel:">+91-9820543616</a>
+                        </li>
+                        <li>
+                            <a href="mailto:">admin@wodehousegymkhana.in</a>
+                        </li>
+                        <li>182, Maharshi Karve Road, Nariman Point, Mumbai – 400 021 India</li>
+                    </ul>
+                </div>
+                <!-- Footer Links End -->
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <!-- Footer Links Start -->
+                <div class="footer-links">
+                    <h3>quick links</h3>
+                    <ul>
+                        <li>
+                            <a href="index.php">Home</a>
+                        </li>
+                        <li>
+                            <a href="#">About Us</a>
+                        </li>
+                        <li>
+                            <a href="#">Facilities</a>
+                        </li>
+                        <li>
+                            <a href="#">Events</a>
+                        </li>
+                        <li>
+                            <a href="#">News & Updates</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Footer Links End -->
+            </div>
+            <div class="col-lg-3 col-md-5">
+                <!-- Footer Newsletter Box Start -->
+                <div class="footer-newsletter-box footer-links">
+                    <h3>Newsletters</h3>
+                    <form id="latestnewsForm" action="#" method="POST">
+                        <div class="form-group">
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                id="mail"
+                                placeholder="Enter your email"
+                                required="">
+                                <button type="submit" class="btn-default btn-highlighted">Subscribe Now</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Footer Newsletter Box End -->
+                </div>
+            </div>
+            <!-- Footer Copyright Section Start -->
+            <div class="footer-copyright">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <!-- Footer Copyright Start -->
+                        <div class="footer-copyright-text">
+                            <p>Copyright © 2025 Wodehouse Gymkhana. All Rights Reserved.</p>
+                        </div>
+                        <!-- Footer Copyright End -->
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Footer Menu Start -->
+                        <div class="footer-menu">
+                            <ul>
+                                <li>
+                                    <a href="#">Help</a>
+                                </li>
+                                <li>
+                                    <a href="#">Privacy Policy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Term's & Condition</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Footer Menu End -->
+                    </div>
+                </div>
+            </div>
+            <!-- Footer Copyright Section End -->
+        </div>
+    </footer>
+    <!-- Footer End -->
+    <!-- Jquery Library File -->
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap js file -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Validator js file -->
+    <script src="js/validator.min.js"></script>
+    <!-- SlickNav js file -->
+    <script src="js/jquery.slicknav.js"></script>
+    <!-- Swiper js file -->
+    <script src="js/swiper-bundle.min.js"></script>
+    <!-- Counter js file -->
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.counterup.min.js"></script>
+    <!-- Magnific js file -->
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <!-- SmoothScroll -->
+    <script src="js/SmoothScroll.js"></script>
+    <!-- Parallax js -->
+    <script src="js/parallaxie.js"></script>
+    <!-- MagicCursor js file -->
+    <script src="js/gsap.min.js"></script>
+    <script src="js/magiccursor.js"></script>
+    <!-- Text Effect js file -->
+    <script src="js/SplitText.js"></script>
+    <script src="js/ScrollTrigger.min.js"></script>
+    <!-- YTPlayer js File -->
+    <script src="js/jquery.mb.YTPlayer.min.js"></script>
+    <!-- Wow js file -->
+    <script src="js/wow.min.js"></script>
+    <!-- Main Custom js file -->
+    <script src="js/function.js"></script>
+    <script>
+        document
+            .getElementById('togglePassword')
+            .addEventListener('click', function (e) {
+                const passwordInput = document.getElementById('password');
+                const type = passwordInput.getAttribute('type') === 'password'
+                    ? 'text'
+                    : 'password';
+                passwordInput.setAttribute('type', type);
+                this
+                    .querySelector('i')
+                    .classList
+                    .toggle('fa-eye-slash');
+                this
+                    .querySelector('i')
+                    .classList
+                    .toggle('fa-eye');
+            });
+    </script>
+    <script>
+        document
+            .getElementById('togglePassword')
+            .addEventListener('click', function () {
+                const passwordInput = document.getElementById('newPassword');
+                const icon = this.querySelector('i');
+                const type = passwordInput.getAttribute('type') === 'password'
+                    ? 'text'
+                    : 'password';
+                passwordInput.setAttribute('type', type);
+                icon
+                    .classList
+                    .toggle('fa-eye-slash');
+                icon
+                    .classList
+                    .toggle('fa-eye');
+            });
+        document
+            .getElementById('toggleConfirmPassword')
+            .addEventListener('click', function () {
+                const confirmPasswordInput = document.getElementById('confirmPassword');
+                const icon = this.querySelector('i');
+                const type = confirmPasswordInput.getAttribute('type') === 'password'
+                    ? 'text'
+                    : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                icon
+                    .classList
+                    .toggle('fa-eye-slash');
+                icon
+                    .classList
+                    .toggle('fa-eye');
+            });
+    </script>
+</body>
+</html>
+about-us.php->
+<?php include("header.php"); ?>
+<!-- Page Header Section Start -->
+<div class="page-header bg-section parallaxie">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Page Header Box Start -->
+                <div class="page-header-box">
+                    <h1 class="text-anime-style-3" data-cursor="-opaque">About us</h1>
+                    <!-- <nav class="wow fadeInUp" data-wow-delay="0.25s">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="index.html">home</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">about us</li>
+                        </ol>
+                    </nav> -->
+                </div>
+                <!-- Page Header Box End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Header Section End -->
+<!-- About Us Section Start -->
+<div class="about-us">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="about-us-content w-75">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Wodehouse Gymkhana's History</h3>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">The Gymkhana where history inspires your
+                            every moment</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="service-item wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+                    <!-- Service Image Start -->
+                    <div class="service-image">
+                        <a href="#" data-cursor-text="View">
+                            <figure class="image-anime">
+                                <img src="images/about-pg.jpg" alt="">
+                            </figure>
+                        </a>
+                    </div>
+                    <!-- Service Image End -->
+                    <!-- Service Content Start -->
+                    <div class="service-content">
+                        <div class="service-no">
+                            <h2>01</h2>
+                        </div>
+                        <div class="service-title">
+                            <h3>
+                                <a href="#">Contact Now</a>
+                            </h3>
+                        </div>
+                        <div class="service-btn">
+                            <a href="#"><img src="images/arrow-black.svg" alt=""></a>
+                        </div>
+                    </div>
+                    <!-- Service Content End -->
+                </div>
+                <!-- About Us Image Start -->
+                <div class="about-us-images d-none">
+                    <!-- About Us Image 2 Start -->
+                    <div class="about-us-img-1">
+                        <figure class="image-anime reveal">
+                            <img src="images/about-us-img-1.png" alt="">
+                        </figure>
+                    </div>
+                    <!-- About Us Image 2 End -->
+                    <!-- About Us Image 2 Start -->
+                    <div class="about-us-img-2">
+                        <figure class="image-anime reveal">
+                            <img src="images/about-us-img-2.png" alt="">
+                        </figure>
+                    </div>
+                    <!-- About Us Image 2 End -->
+                    <!-- Hero Contact Circle Start -->
+                    <div class="get-membership-circle">
+                        <a href="#">
+                            <img src="images/get-membership-circle.png" alt="">
+                        </a>
+                    </div>
+                    <!-- Hero Contact Circle End -->
+                </div>
+                <!-- About Us Image End -->
+            </div>
+            <div class="col-lg-9">
+                <!-- About Us Content Start -->
+                <div class="about-us-content">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <p class="wow fadeInUp mt-0" data-wow-delay="0.2s">At the turn of the 20th century, the British
+                            Raj was in its heyday. The British were one of the greatest promoters of sociability. As
+                            soon as a young officer or bureaucrat landed in “our station in Bombay”, he was swamped with
+                            invitations from the colonel, or more importantly, the colonel’s wife. There were balls and
+                            barra khanas, riding, races, cricket. And, as always, tea in the verandah and brandy-pawnee
+                            at sundown.<br>
+                            That inevitably led to the birth of a number of clubs with a hierarchy of their own. There
+                            were different clubs for different categories of people and this was understood rather than
+                            overtly stated.<br>
+                            Incidentally, the first known use of the word “gymkhana” is said to have been around 1877.
+                            It was probably a modification of the Hindi ‘gedkhana’ and Urdu ‘gendkhana’ (literally, ball
+                            court), In a lighter vein, people say that after a session at the gym you are ready for
+                            great ‘khana'(food).<br>
+                            Wodehouse Gymkhana was started in 1909 as Bombay Commercial Gymkhana. In 1935, the name was
+                            changed to Wodehouse Gymkhana, after Sir Philips Wodehouse, who was Governor of Bombay from
+                            1872-75. There is said to be a connection between this Wodehouse and his more famous
+                            namesake PG Wodehouse, who has a great fan following in India.<br>
+                            Wodehouse Gymkhana stands on Wodehouse Road (now re-named Nathalal Parekh Marg after Subhas
+                            Chandra Bose’s treasurer).<br>
+                            Like other gymkhanas in the city, Wodehouse Gymkhana was strictly a white man’s club.
+                            Indians were not allowed in, even as guests. It as began to change after Independence when a
+                            few Indian names started appearing among the guests. The first Indian President was the
+                            hugely popular Sam Aga, still remembered for his camaraderie. He would look out of the
+                            window of the billiards room at the long verandah, still unchanged from those days, and
+                            challenged members to a game. The loser has to pay a penalty of 50 paise.<br>
+                            Wodehouse Gymkhana is not without its share of gossip and scandals. The names of lady guests
+                            were never entered in the register. The reason: discretion. They happened to be mistresses
+                            whom members could entertain without fear of being found out.</p>
+                    </div>
+                    <!-- Section Title End -->
+                </div>
+                <!-- About Us Content End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About Us Section End -->
+<!-- Our Approach Section Start -->
+<div class="our-approach">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <!-- Approach Content Start -->
+                <div class="approach-content">
+                    <!-- Section Title Start -->
+                    <div class="section-title">
+                        <h3 class="wow fadeInUp">Wodehouse Gymkhana</h3>
+                        <h2 class="text-anime-style-3" data-cursor="-opaque">Heritage & Tradition</h2>
+                        <p class="wow fadeInUp" data-wow-delay="0.2s">The decision to open membership to Indians was
+                            controversial. A resolution was passed to wind up the gymkhana rather than admit Indians
+                            (with strong pressure from a now-independent India to admit Indians in the Gymkhana).
+                            Furniture was sold. In typical British style, a last hurrah was planned at khandala.
+                            Fortunately, Sam Aga and George Jagtiani, an early Indian member, were able to step in and
+                            Wodehouse Gymkhana went on to live another day.<br>
+                            Situated at it was on prime land in South Bombay, Wodehouse Gymkhana had to deal with
+                            problems over its property. While the committee members were discussing what to do about the
+                            latest debacle, one member’s eye fell on a man sitting in a chair on the lawn, calmly
+                            reading his paper. “He’s a lawyer, let’s get him to join the committee,” he said, and so, in
+                            a spate of a few minutes, Dara Zaiwalla joined the committee. Similarly, other members
+                            joined the committee in a few minutes (Today, it might take many anxious months).</p>
+                    </div>
+                    <!-- Section Title End -->
+                </div>
+                <!-- Approach Content End -->
+            </div>
+            <div class="col-lg-6">
+                <!-- Approach Images Start -->
+                <div class="approach-images">
+                    <!-- Approach Image 1 Start -->
+                    <div class="approach-img-1">
+                        <figure class="image-anime reveal">
+                            <img src="images/abt-1.jpg" alt="">
+                        </figure>
+                    </div>
+                    <!-- Approach Image 1 End -->
+                    <!-- Approach Image 2 Start -->
+                    <div class="approach-img-2">
+                        <figure class="image-anime reveal">
+                            <img src="images/abt-2.jpg" alt="">
+                        </figure>
+                    </div>
+                    <!-- Approach Image 2 End -->
+                </div>
+                <!-- Approach Images End -->
+            </div>
+            <div class="col-lg-12">
+                <!-- Approach Content Start -->
+                <div class="approach-content">
+                    <!-- Approach Item Box Start -->
+                    <div class="wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="approach-item-content">
+                            <p>Dara’s expertise was very helpful when the Gymkhana undertook renovation of the premises.
+                                Dara Zaiwalla was the longest serving President of the Gymkhana and continues as
+                                President Emeritus. Ask members or even guests and the first thing they will say about
+                                Wodehouse Gymkhana is that it is “homely”. Everyone knows everyone. It’s one big happy
+                                family where you never feel alone or isolated.<br>
+                                Delicious food is a Wodehouse Gymkhana hallmark and has been over the years. On one
+                                occasion the chef was absent, a catastrophe was averted by getting the mali to taken
+                                over (he has been the chef’s help). The appetizing dishes he produced got him an instant
+                                promotion.<br>
+                                For more than a century, Wodehouse Gymkhana has been an eyewitness to history and to
+                                life and times of the city. When it was shutting down, Bombay Club (which later became
+                                the Intercontinental Hotel) gave Wodehouse Gymkhana an antiue banuette of four chairs,
+                                thoughtfully designed with slots for whisky glasses. It has been with Wodehouse gymkhana
+                                ever since, a part of history, with its own tale to tell.<br>
+                                Does Wodehouse Gymkhana have lingering memories? What about the generations that have
+                                grown around it? After another hundred years, will it have a new story to tell?
+                                Wodehouse Gymkhana harbors some delightful secrets…</p>
+                        </div>
+                    </div>
+                    <!-- Approach Item Box End -->
+                </div>
+                <!-- Approach Content End -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Our Approach Section End -->
+<?php include("footer.php"); ?>
+login.php->
+<?php include("header.php"); ?>
+<div class="page-header bg-section parallaxie d-none">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header-box">
+                    <h1 class="text-anime-style-3" data-cursor="-opaque">Login</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-contact-us login-page">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-xl-5 col-lg-8 col-md-10">
+                <div class="login-card">
+                    <h3>Welcome Members</h3>
+                    <p>Login to your account</p>
+                    <form>
+                        <div class="mb-3 text-start">
+                            <label for="emailId" class="form-label">Email Id*</label>
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="emailId"
+                                name="emailId"
+                                placeholder="Enter Your Email Id*"
+                                required="required">
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="password" class="form-label">Password*</label>
+                            <div class="input-group">
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    required="required">
+                                <span class="input-group-text" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="rememberMe"
+                                    name="rememberMe">
+                                <label class="form-check-label checkbox-label" for="rememberMe">
+                                    Remember me
+                                </label>
+                            </div>
+                            <a href="forget-password.php" class="forgot-password">Forgot Password?</a>
+                        </div>
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-login">LOGIN</button>
+                        </div>
+                        <p class="mt-3">Not a member?
+                            <a href="contact-us.php" class="signup-link">Enquire Now</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php include("footer.php"); ?>
+signup.php->
+<?php include("header.php"); ?>
+<div class="page-header bg-section parallaxie d-none">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Page Header Box Start -->
+                <div class="page-header-box">
+                    <h1 class="text-anime-style-3" data-cursor="-opaque">Login</h1>
+                </div>
+                <!-- Page Header Box End -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-contact-us login-page">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-xl-5 col-lg-8 col-md-10">
+                <div class="login-card">
+                    <h3>Create My Account</h3>
+                    <p>Join the Wodehouse Legacy</p>
+                    <form>
+                        <div class="mb-3 text-start">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Enter your full name"
+                                required="required">
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                required="required">
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="newPassword" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="newPassword"
+                                    name="newPassword"
+                                    placeholder="Minimum 8 characters"
+                                    required="required">
+                                <span class="input-group-text" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mb-4 text-start">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="Re-enter your password"
+                                    required="required">
+                                <span class="input-group-text" id="toggleConfirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mb-4 form-check text-start">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                id="agreeTerms"
+                                name="agreeTerms"
+                                required="required">
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the
+                                <a href="#" class="login-link">Terms of Service</a>
+                                and
+                                <a href="#" class="login-link">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-login">LOGIN</button>
+                        </div>
+                        <p class="login-link-text">Already have an account?
+                            <a href="login.php" class="login-link">Log In Here</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php include("footer.php"); ?>
+
+
+and this member pages will have sidebar for easier navigation and currently system is not connected with backend so we just need to design the pages as per frontend for member pages so that anybody who clicks on login button will be navigated to dashboard page and all other navigation link will be in sidebar header will be hidden in this member pages sidebar will have a separate link to navigate back to site
+
+provide complete code with each and every feature display phase wise without comments

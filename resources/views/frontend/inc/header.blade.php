@@ -142,7 +142,7 @@
                                             @endif
                                             <div style="display: flex; flex-direction: column; line-height: 1.2;">
                                                 <span>{{ Auth::guard('member')->user()->first_name }}</span>
-                                                <small style="font-size: 11px; opacity: 0.9;">
+                                                <small style="font-size: 11px; opacity: 0.9; text-align: left;">
                                                     {{ optional(Auth::guard('member')->user()->meta)->designation ?? 'Member' }}
                                                 </small>
                                             </div>

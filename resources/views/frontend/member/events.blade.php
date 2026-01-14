@@ -77,9 +77,9 @@
                         <p class="card-text small text-muted">A look back at this successful event.</p>
 
                         <div class="mt-auto pt-2">
-                            <a href="{{ route('member.events.show', $event->id) }}"
+                            <a href="{{ route('member.events.details', $event->id) }}"
                                 class="btn btn-outline-secondary btn-sm rounded-pill w-100">
-                                View Gallery
+                                View Details
                             </a>
                         </div>
                     </div>

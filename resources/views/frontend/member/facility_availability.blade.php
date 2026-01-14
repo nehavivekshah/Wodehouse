@@ -28,11 +28,7 @@
         background: #f8f9ff;
     }
 
-    .time-slot.selected {
-        background: #0d6efd !important;
-        color: #fff !important;
-        border-color: #0d6efd !important;
-    }
+    .time-slot.selected { background: var(--accent-color) !important; color: var(--primary-color) !important; border-color: var(--accent-color) !important; }
 
     .time-slot.booked {
         background: #f8d7da;

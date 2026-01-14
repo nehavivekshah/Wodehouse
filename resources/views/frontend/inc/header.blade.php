@@ -140,7 +140,12 @@
                                             @else
                                                 <i class="fas fa-user-circle" style="font-size: 24px;"></i>
                                             @endif
-                                            {{ Auth::guard('member')->user()->first_name }}
+                                            <div style="display: flex; flex-direction: column; line-height: 1.2;">
+                                                <span>{{ Auth::guard('member')->user()->first_name }}</span>
+                                                <small style="font-size: 11px; opacity: 0.9;">
+                                                    {{ optional(Auth::guard('member')->user()->meta)->designation ?? 'Member' }}
+                                                </small>
+                                            </div>
                                         </a>
                                         <ul>
                                             <li class="nav-item">

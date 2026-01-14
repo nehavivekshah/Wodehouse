@@ -10,7 +10,15 @@ class Usermetas extends Model
     protected $table = 'usermetas';
 
     protected $fillable = [
-        'uid', 'company', 'address', 'city', 'pincode', 'state', 'country', 'status'
+        'uid',
+        'company',
+        'designation',
+        'address',
+        'city',
+        'pincode',
+        'state',
+        'country',
+        'status'
     ];
 
     // Relationship: UserMeta belongs to a user

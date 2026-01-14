@@ -132,10 +132,11 @@
                                     </li> -->
                                 @if(Auth::guard('member')->check())
                                     <li class="nav-item submenu">
-                                        <a class="nav-link" href="#" style="display: flex; align-items: center; gap: 8px;">
+                                        <a class="nav-link btn-default btn-highlighted" href="#"
+                                            style="display: flex; align-items: center; gap: 8px; color: #fff !important; padding: 10px 20px; border-radius: 5px;">
                                             @if(Auth::guard('member')->user()->photo)
                                                 <img src="{{ asset(Auth::guard('member')->user()->photo) }}" alt="Profile"
-                                                    style="width: 30px; height: 30px; object-fit: cover; border-radius: 50%;">
+                                                    style="width: 30px; height: 30px; object-fit: cover; border-radius: 50%; border: 2px solid #fff;">
                                             @else
                                                 <i class="fas fa-user-circle" style="font-size: 24px;"></i>
                                             @endif

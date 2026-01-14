@@ -373,8 +373,6 @@ CREATE TABLE `food_orders` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `status` enum('pending','preparing','completed','cancelled') NOT NULL DEFAULT 'pending',
-  `payment_status` varchar(255) NOT NULL DEFAULT 'pending',
-  `payment_method` varchar(255) NOT NULL DEFAULT 'cash',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

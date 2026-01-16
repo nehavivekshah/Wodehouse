@@ -490,22 +490,30 @@ class AdminController extends Controller
 
     public function getFoodOrderDetails($id)
     {
-        $order = \App\Models\FoodOrder::with(['user', 'items.foodItem'])->find($id);
+        try {
+            $order = \App\Models\FoodOrder::with(['user', 'items.foodItem'])->find($id);
 
-        if ($order) {
-            return response()->json(['success' => true, 'order' => $order]);
+            if ($order) {
+                return response()->json(['success' => true, 'order' => $order]);
+            }
+            return response()->json(['success' => false, 'message' => 'Order not found']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-        return response()->json(['success' => false, 'message' => 'Order not found']);
     }
 
     public function getEventRegistrationDetails($id)
     {
-        $registration = \App\Models\EventRegistration::with(['user', 'event'])->find($id);
+        try {
+            $registration = \App\Models\EventRegistration::with(['user', 'event'])->find($id);
 
-        if ($registration) {
-            return response()->json(['success' => true, 'registration' => $registration]);
+            if ($registration) {
+                return response()->json(['success' => true, 'registration' => $registration]);
+            }
+            return response()->json(['success' => false, 'message' => 'Registration not found']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-        return response()->json(['success' => false, 'message' => 'Registration not found']);
     }
 
     public function updateEventRegistrationStatus(Request $request, $id)
@@ -549,17 +557,21 @@ class AdminController extends Controller
 
     public function getBookingDetails($id)
     {
-        $booking = DB::table('bookings')
-            ->join('users', 'bookings.user_id', '=', 'users.id')
-            ->join('facilities', 'bookings.facility_id', '=', 'facilities.id')
-            ->select('bookings.*', 'users.first_name', 'users.last_name', 'users.email', 'users.mob', 'facilities.title as facility_name')
-            ->where('bookings.id', $id)
-            ->first();
+        try {
+            $booking = DB::table('bookings')
+                ->join('users', 'bookings.user_id', '=', 'users.id')
+                ->join('facilities', 'bookings.facility_id', '=', 'facilities.id')
+                ->select('bookings.*', 'users.first_name', 'users.last_name', 'users.email', 'users.mob', 'facilities.title as facility_name')
+                ->where('bookings.id', $id)
+                ->first();
 
-        if ($booking) {
-            return response()->json(['success' => true, 'booking' => $booking]);
+            if ($booking) {
+                return response()->json(['success' => true, 'booking' => $booking]);
+            }
+            return response()->json(['success' => false, 'message' => 'Booking not found']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-        return response()->json(['success' => false, 'message' => 'Booking not found']);
     }
 
     public function updateBookingStatus(Request $request, $id)

@@ -28,7 +28,7 @@
                     @foreach($items as $item)
                     <tr id="itemRow{{ $item->id }}">
                         <td>
-                            <img src="/public/{{ asset($item->image ?? 'assets/images/no-image.png') }}" 
+                            <img src="{{ asset('/public/'.$item->image ?? 'assets/images/no-image.png') }}" 
                                  alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                         </td>
                         <td><strong>{{ $item->name }}</strong></td>

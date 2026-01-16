@@ -1,6 +1,4 @@
-@extends('backend.layouts.app')
-
-@section('content')
+@include("backend.inc.member_sidebar")
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Food Orders</h5>
@@ -97,4 +95,4 @@
             });
         </script>
     @endpush
-@endsection
+@include("backend.inc.member_footer")

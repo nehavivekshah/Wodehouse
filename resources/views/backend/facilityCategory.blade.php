@@ -18,7 +18,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Title</th>
-                        <th>Status</th>
+                        <th>Parent Category</th>
+                        <th></th>Status</th>
                         <th>Created</th>
                         <th>Action</th>
                     </tr>
@@ -28,6 +29,7 @@
                     <tr id="categoryRow{{ $cat->id }}">
                         <td>#{{ $cat->id }}</td>
                         <td>{{ $cat->title }}</td>
+                        <td>{{ $cat->parent->title ?? 'None' }}</td>
                         <td>
                             <select class="form-control form-control-sm statusToggle" data-id="{{ $cat->id }}">
                                 <option value="1" {{ $cat->status == 1 ? 'selected' : '' }}>Active</option>

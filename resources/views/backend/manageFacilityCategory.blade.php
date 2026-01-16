@@ -12,19 +12,33 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label>Category Title</label>
-                    <input type="text" name="title" class="form-control" value="{{ $category->title ?? '' }}" required id="categoryTitle">
+                    <input type="text" name="title" class="form-control" value="{{ $category->title ?? '' }}" required
+                        id="categoryTitle">
                 </div>
-                
+
                 <div class="col-md-6 mb-3">
                     <label>Slug</label>
-                    <input type="text" name="slog" class="form-control" value="{{ $category->slog ?? '' }}" id="categorySlug">
+                    <input type="text" name="slog" class="form-control" value="{{ $category->slog ?? '' }}"
+                        id="categorySlug">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label>Parent Category (Optional)</label>
+                    <select name="parent_id" class="form-control">
+                        <option value="">None</option>
+                        @foreach($parents as $parent)
+                            <option value="{{ $parent->id }}" {{ (isset($category) && $category->parent_id == $parent->id) ? 'selected' : '' }}>{{ $parent->title }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label>Status</label>
                     <select name="status" class="form-control">
-                        <option value="1" {{ isset($category) && $category->status == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ isset($category) && $category->status == 0 ? 'selected' : '' }}>Inactive</option>
+                        <option value="1" {{ isset($category) && $category->status == 1 ? 'selected' : '' }}>Active
+                        </option>
+                        <option value="0" {{ isset($category) && $category->status == 0 ? 'selected' : '' }}>Inactive
+                        </option>
                     </select>
                 </div>
             </div>
@@ -34,12 +48,12 @@
         </form>
     </div>
 </div>
-                
+
 <script>
-document.getElementById('categoryTitle').addEventListener('keyup', function() {
-    let slug = this.value.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
-    document.getElementById('categorySlug').value = slug;
-});
+    document.getElementById('categoryTitle').addEventListener('keyup', function () {
+        let slug = this.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+        document.getElementById('categorySlug').value = slug;
+    });
 </script>
 
 @include("backend.inc.member_footer")

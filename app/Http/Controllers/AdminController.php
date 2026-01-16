@@ -379,10 +379,11 @@ class AdminController extends Controller
     // Facility Categories List
     public function facilityCategory()
     {
-        $categories = DB::table('facility_categories')->orderBy('created_at', 'desc')->get();
+        $categories = \App\Models\Facility_categories::with('parent')->orderBy('created_at', 'desc')->get();
         return view('backend.facilityCategory', compact('categories'));
     }
 
+    // Manage Add/Edit Facility Category
     // Manage Add/Edit Facility Category
     public function manageFacilityCategory($id = null)
     {
@@ -390,7 +391,16 @@ class AdminController extends Controller
         if ($id) {
             $category = DB::table('facility_categories')->where('id', $id)->first();
         }
-        return view('backend.manageFacilityCategory', compact('category'));
+
+        $parents = DB::table('facility_categories')
+            ->where('status', 1)
+            ->whereNull('parent_id') // Limit to root categories as parents for now to avoid complexity, or remove if infinite nesting allowed
+            ->when($id, function ($q) use ($id) {
+                return $q->where('id', '!=', $id);
+            })
+            ->get();
+
+        return view('backend.manageFacilityCategory', compact('category', 'parents'));
     }
 
     // Submit Facility Category Add/Edit
@@ -403,6 +413,7 @@ class AdminController extends Controller
         $data = [
             'title' => $request->title,
             'slog' => $request->slog ?? Str::slug($request->title),
+            'parent_id' => $request->parent_id,
             'status' => $request->status ?? 1,
             'updated_at' => now(),
         ];
@@ -614,9 +625,9 @@ class AdminController extends Controller
         DB::table('users')
             ->where('id', $id)
             ->update([
-                    'status' => $request->status,
-                    'updated_at' => now()
-                ]);
+                'status' => $request->status,
+                'updated_at' => now()
+            ]);
 
         return response()->json(['success' => true]);
     }

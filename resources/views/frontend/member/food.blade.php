@@ -68,7 +68,7 @@
                                         <div class="col-lg-6 mb-4">
                                             <div
                                                 class="card member-card h-100 flex-row overflow-hidden align-items-center p-0 shadow-sm">
-                                                <img src="{{ asset($item->image ?? 'images/no-food.png') }}" alt="{{ $item->name }}"
+                                                <img src="{{ asset('/public/'.$item->image ?? '/public/'.images/no-food.png') }}" alt="{{ $item->name }}"
                                                     style="width:130px; height:100%; object-fit:cover; min-height: 130px;">
 
                                                 <div class="card-body p-3">

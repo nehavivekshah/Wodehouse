@@ -12,6 +12,7 @@ use App\Models\FacilityAvailability;
 use App\Models\Booking;
 use App\Models\FoodCategory;
 use App\Models\FoodOrder;
+use App\Models\FoodOrderItem;
 use App\Models\CartItem;
 use App\Models\Usermetas;
 use Carbon\Carbon;

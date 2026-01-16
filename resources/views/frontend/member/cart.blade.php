@@ -37,7 +37,7 @@
                                 <tr id="row-{{ $item->id }}" data-id="{{ $item->id }}">
                                     <td>
                                         <div class="d-flex align-items-center p-2">
-                                            <img src="{{ $item->food->image }}" class="img-fluid rounded me-3"
+                                            <img src="/public/{{ $item->food->image }}" class="img-fluid rounded me-3"
                                                 style="width:80px;height:60px;object-fit:cover">
                                             <div>
                                                 <h6 class="mb-0">{{ $item->food->name }}</h6>

@@ -218,58 +218,59 @@ class MemberController extends Controller
     {
         $user = auth()->user();
         $cartItems = $user->cartItems()->with('food')->get();
-
+    
         if ($cartItems->isEmpty()) {
-            return redirect()->route('member.menu')->with('error', 'Cart is empty');
+            return redirect()
+                ->route('member.menu')
+                ->with('error', 'Your cart is empty.');
         }
-
-        $subtotal = 0;
-        foreach ($cartItems as $item) {
-            $subtotal += $item->food->price * $item->quantity;
-        }
-        $gst = $subtotal * 0.18;
-        $total = $subtotal + $gst;
-
+    
+        // Calculate total
+        $total = $cartItems->sum(function ($item) {
+            return $item->food->price * $item->quantity;
+        });
+    
+        $gst = round($total * 0.18, 2);
+        $total = $total + $gst;
+    
         DB::beginTransaction();
+    
         try {
             $paymentMethod = $request->payment_method ?? 'cash';
-            $paymentStatus = ($paymentMethod == 'cash') ? 'pending' : 'pending'; // Adjust if online payment is added
-
+    
             $order = FoodOrder::create([
-                'user_id' => $user->id,
-                'total' => $total,
-                'status' => 'pending',
-                'payment_status' => $paymentStatus,
+                'user_id'        => $user->id,
+                'total'          => $total,
+                'status'         => 'pending',
+                'payment_status' => 'pending',
                 'payment_method' => $paymentMethod
             ]);
-
+    
             foreach ($cartItems as $item) {
-                // Assuming FoodOrderItem model exists, checking imports
-                // If not, we might need to use DB::table or create model. 
-                // Let's assume FoodOrderItem exists based on previous context, 
-                // but wait, I didn't verify FoodOrderItem model existence.
-                // Checking SQL dump might reveal table `food_order_items`.
-                // Let me use the relationship if defined in FoodOrder.
-
-                DB::table('food_order_items')->insert([
-                    'order_id' => $order->id,
-                    'food_item_id' => $item->food_id,
-                    'qty' => $item->quantity,
-                    'price' => $item->food->price,
-                    'created_at' => now(),
-                    'updated_at' => now()
+                FoodOrderItem::create([
+                    'food_order_id' => $order->id,
+                    'food_item_id'  => $item->food_id,
+                    'qty'           => $item->quantity,
+                    'price'         => $item->food->price
                 ]);
             }
-
+    
             // Clear cart
             $user->cartItems()->delete();
-
+    
             DB::commit();
-            return redirect()->route('member.menu')->with('success', 'Order placed successfully! Order ID: #' . $order->id);
-
+    
+            return redirect()
+                ->route('member.menu')
+                ->with('success', 'Order placed successfully! Order ID: #ORD-' . $order->id);
+    
         } catch (\Exception $e) {
-            DB::rollback();
-            \Log::error($e);
+            DB::rollBack();
+            \Log::error('Food order failed', [
+                'user_id' => $user->id,
+                'error'   => $e->getMessage()
+            ]);
+    
             return back()->with('error', 'Failed to place order. Please try again.');
         }
     }

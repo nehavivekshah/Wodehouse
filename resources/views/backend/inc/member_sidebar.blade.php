@@ -78,6 +78,11 @@
                             <i class="fas fa-list-alt"></i> Event Categories
                         </a>
                     </li>
+                    <li>
+                        <a href="/admin/event-registrations">
+                            <i class="fas fa-users"></i> Event Registrations
+                        </a>
+                    </li>
 
                     <li class="nav-heading">Blog Management</li>
                     <li>

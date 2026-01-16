@@ -498,11 +498,21 @@ class AdminController extends Controller
         return response()->json(['success' => false, 'message' => 'Order not found']);
     }
 
-    public function updateOrderStatus(Request $request, $id)
+    public function getEventRegistrationDetails($id)
     {
-        $order = \App\Models\FoodOrder::findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
+        $registration = \App\Models\EventRegistration::with(['user', 'event'])->find($id);
+
+        if ($registration) {
+            return response()->json(['success' => true, 'registration' => $registration]);
+        }
+        return response()->json(['success' => false, 'message' => 'Registration not found']);
+    }
+
+    public function updateEventRegistrationStatus(Request $request, $id)
+    {
+        $registration = \App\Models\EventRegistration::findOrFail($id);
+        $registration->status = $request->status;
+        $registration->save();
         return response()->json(['success' => true]);
     }
 

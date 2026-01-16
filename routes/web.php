@@ -225,6 +225,8 @@ Route::middleware('auth:admin')->group(function () {
 
     // Admin Event Registrations
     Route::get('/admin/event-registrations', [AdminController::class, 'eventRegistrations'])->name('admin.eventRegistrations');
+    Route::get('/admin/event-registration-details/{id}', [AdminController::class, 'getEventRegistrationDetails'])->name('admin.eventRegistrationDetails');
+    Route::post('/admin/event-registration/update/{id}', [AdminController::class, 'updateEventRegistrationStatus'])->name('admin.eventRegistration.update');
 
     // Admin Facility Bookings
     // Admin Facility Bookings

@@ -527,6 +527,35 @@ class AdminController extends Controller
         return view('backend.facility_bookings', compact('bookings'));
     }
 
+    public function getBookingDetails($id)
+    {
+        $booking = DB::table('bookings')
+            ->join('users', 'bookings.user_id', '=', 'users.id')
+            ->join('facilities', 'bookings.facility_id', '=', 'facilities.id')
+            ->select('bookings.*', 'users.first_name', 'users.last_name', 'users.email', 'users.mob', 'facilities.title as facility_name')
+            ->where('bookings.id', $id)
+            ->first();
+
+        if ($booking) {
+            return response()->json(['success' => true, 'booking' => $booking]);
+        }
+        return response()->json(['success' => false, 'message' => 'Booking not found']);
+    }
+
+    public function updateBookingStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,cancelled,completed'
+        ]);
+
+        DB::table('bookings')->where('id', $id)->update([
+            'status' => $request->status,
+            'updated_at' => now()
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
     /* =======================
             ALL USERS
         ======================== */

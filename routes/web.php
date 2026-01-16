@@ -226,7 +226,10 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/event-registrations', [AdminController::class, 'eventRegistrations'])->name('admin.eventRegistrations');
 
     // Admin Facility Bookings
+    // Admin Facility Bookings
     Route::get('/admin/facility-bookings', [AdminController::class, 'facilityBookings'])->name('admin.facilityBookings');
+    Route::get('/admin/booking-details/{id}', [AdminController::class, 'getBookingDetails'])->name('admin.booking.details');
+    Route::post('/admin/update-booking-status/{id}', [AdminController::class, 'updateBookingStatus'])->name('admin.booking.updateStatus');
 });
 
 Route::get('/clear-cache', function () {

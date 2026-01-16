@@ -110,7 +110,10 @@
 
                 <div class="cart-info ps-2">
                     <i class="fas fa-shopping-cart text-primary me-2"></i>
-                    <span id="cart-summary" class="fw-bold small text-dark">0 Items | ₹ 0.00</span>
+                    <span id="cart-summary" class="fw-bold small text-dark">
+                        {{ $cartCount }} Items | ₹ {{ number_format($cartTotal, 2) }}
+                    </span>
+
                 </div>
 
                 <a href="{{ route('member.food.cart') }}" class="btn btn-primary rounded-pill px-4 btn-sm shadow-sm">

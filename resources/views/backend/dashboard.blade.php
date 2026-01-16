@@ -1,6 +1,5 @@
-@extends('backend.layouts.app')
+@include("frontend.member.member_sidebar")
 
-@section('content')
     <div class="container-fluid">
         <h1 class="page-title">Admin Dashboard</h1>
         <p class="page-subtitle">Overview of system activity.</p>
@@ -92,4 +91,4 @@
             </div>
         </div>
     </div>
-@endsection
+@include("frontend.member.member_footer")

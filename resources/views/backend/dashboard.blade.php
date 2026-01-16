@@ -1,4 +1,4 @@
-@include("frontend.member.member_sidebar")
+@include("backend.inc.member_sidebar")
 
     <div class="container-fluid">
         <h1 class="page-title">Admin Dashboard</h1>
@@ -91,4 +91,4 @@
             </div>
         </div>
     </div>
-@include("frontend.member.member_footer")
+@include("backend.inc.member_footer")

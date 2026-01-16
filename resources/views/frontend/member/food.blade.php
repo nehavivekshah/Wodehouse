@@ -106,7 +106,7 @@
 
             {{-- Floating Cart - Positioned Bottom Right --}}
             <div class="floating-cart shadow-lg p-3 bg-white border rounded-pill d-flex align-items-center justify-content-between fixed-bottom mb-4 me-4 ms-auto"
-                style="width: 320px; z-index: 1050; right: 20px; left: auto;">
+                style="width: 350px; z-index: 1050; right: 20px; left: auto;">
 
                 <div class="cart-info ps-2">
                     <i class="fas fa-shopping-cart text-primary me-2"></i>

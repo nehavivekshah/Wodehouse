@@ -106,7 +106,7 @@
             });
 
             // View Details
-            $('.viewRegBtn').click(function () {
+            $(document).on('click', '.viewRegBtn', function () {
                 let id = $(this).data('id');
                 $('#viewRegModal').modal('show');
                 $('#regDetailsContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
@@ -142,7 +142,7 @@
             });
 
             // Update Status Modal
-            $('.updateStatusBtn').click(function () {
+            $(document).on('click', '.updateStatusBtn', function () {
                 let id = $(this).data('id');
                 $('#updateRegId').val(id);
                 $('#updateStatusModal').modal('show');

@@ -102,82 +102,84 @@
 
 @include("backend.inc.member_footer")
 
-<script>
-    $(document).ready(function () {
-        $('#bookingsTable').DataTable({
-            "order": [[0, "desc"]]
-        });
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('#bookingsTable').DataTable({
+                "order": [[0, "desc"]]
+            });
 
-        // View Booking Details
-        $('.viewBookingBtn').click(function () {
-            let id = $(this).data('id');
-            $('#viewBookingModal').modal('show');
-            $('#bookingDetailsContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+            // View Booking Details
+            $(document).on('click', '.viewBookingBtn', function () {
+                let id = $(this).data('id');
+                $('#viewBookingModal').modal('show');
+                $('#bookingDetailsContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
 
-            $.ajax({
-                url: '/admin/booking-details/' + id,
-                type: 'GET',
-                success: function (response) {
-                    if (response.success) {
-                        let b = response.booking;
-                        let html = `
-                            <p><strong>Booking ID:</strong> #${b.id}</p>
-                            <p><strong>Facility:</strong> ${b.facility_name}</p>
-                            <p><strong>Member:</strong> ${b.first_name} ${b.last_name}</p>
-                            <p><strong>Email:</strong> ${b.email}</p>
-                            <p><strong>Phone:</strong> ${b.mob ?? 'N/A'}</p>
-                            <hr>
-                            <p><strong>Date:</strong> ${b.booking_date}</p>
-                            <p><strong>Time:</strong> ${b.slot_time}</p>
-                            <p><strong>Amount:</strong> ₹${b.amount}</p>
-                            <p><strong>Status:</strong> <span class="badge bg-secondary">${b.status}</span></p>
-                            <p><strong>Booked At:</strong> ${b.created_at}</p>
-                        `;
-                        $('#bookingDetailsContent').html(html);
-                    } else {
+                $.ajax({
+                    url: '/admin/booking-details/' + id,
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            let b = response.booking;
+                            let html = `
+                                <p><strong>Booking ID:</strong> #${b.id}</p>
+                                <p><strong>Facility:</strong> ${b.facility_name}</p>
+                                <p><strong>Member:</strong> ${b.first_name} ${b.last_name}</p>
+                                <p><strong>Email:</strong> ${b.email}</p>
+                                <p><strong>Phone:</strong> ${b.mob ?? 'N/A'}</p>
+                                <hr>
+                                <p><strong>Date:</strong> ${b.booking_date}</p>
+                                <p><strong>Time:</strong> ${b.slot_time}</p>
+                                <p><strong>Amount:</strong> ₹${b.amount}</p>
+                                <p><strong>Status:</strong> <span class="badge bg-secondary">${b.status}</span></p>
+                                <p><strong>Booked At:</strong> ${b.created_at}</p>
+                            `;
+                            $('#bookingDetailsContent').html(html);
+                        } else {
+                            $('#bookingDetailsContent').html('<p class="text-danger">Error fetching details.</p>');
+                        }
+                    },
+                    error: function () {
                         $('#bookingDetailsContent').html('<p class="text-danger">Error fetching details.</p>');
                     }
-                },
-                error: function () {
-                    $('#bookingDetailsContent').html('<p class="text-danger">Error fetching details.</p>');
-                }
+                });
             });
-        });
 
-        // Open Update Status Modal
-        $('.updateStatusBtn').click(function () {
-            let id = $(this).data('id');
-            $('#updateBookingId').val(id);
-            $('#updateStatusModal').modal('show');
-        });
+            // Open Update Status Modal
+            $(document).on('click', '.updateStatusBtn', function () {
+                let id = $(this).data('id');
+                $('#updateBookingId').val(id);
+                $('#updateStatusModal').modal('show');
+            });
 
-        // Submit Status Update
-        $('#updateStatusForm').submit(function (e) {
-            e.preventDefault();
-            let id = $('#updateBookingId').val();
-            let status = $('#bookingStatusSelect').val();
+            // Submit Status Update
+            $('#updateStatusForm').submit(function (e) {
+                e.preventDefault();
+                let id = $('#updateBookingId').val();
+                let status = $('#bookingStatusSelect').val();
 
-            $.ajax({
-                url: '/admin/update-booking-status/' + id,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    status: status
-                },
-                success: function (response) {
-                    if (response.success) {
-                        $('#updateStatusModal').modal('hide');
-                        Swal.fire('Success', 'Status updated successfully', 'success').then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire('Error', 'Failed to update status', 'error');
+                $.ajax({
+                    url: '/admin/update-booking-status/' + id,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#updateStatusModal').modal('hide');
+                            Swal.fire('Success', 'Status updated successfully', 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', 'Failed to update status', 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'Something went wrong', 'error');
                     }
-                },
-                error: function () {
-                    Swal.fire('Error', 'Something went wrong', 'error');
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
+@endpush

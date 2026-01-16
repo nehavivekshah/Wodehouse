@@ -113,7 +113,7 @@
             });
 
             // View Details
-            $('.viewOrderBtn').click(function () {
+            $(document).on('click', '.viewOrderBtn', function () {
                 let id = $(this).data('id');
                 $('#viewOrderModal').modal('show');
                 $('#orderDetailsContent').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
@@ -127,23 +127,23 @@
                             let itemsHtml = '<ul class="list-group list-group-flush">';
                             o.items.forEach(item => {
                                 itemsHtml += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                                            ${item.qty}x ${item.food_item ? item.food_item.name : 'Unknown Item'}
-                                            <span>₹${item.price}</span>
-                                        </li>`;
+                                        ${item.qty}x ${item.food_item ? item.food_item.name : 'Unknown Item'}
+                                        <span>₹${item.price}</span>
+                                    </li>`;
                             });
                             itemsHtml += '</ul>';
 
                             let html = `
-                                        <h6>Order #${o.id}</h6>
-                                        <p><strong>Member:</strong> ${o.user.first_name} ${o.user.last_name} (${o.user.email})</p>
-                                        <p><strong>Date:</strong> ${o.created_at}</p>
-                                        <p><strong>Status:</strong> <span class="badge bg-secondary">${o.status}</span></p>
-                                        <hr>
-                                        <h6>Items:</h6>
-                                        ${itemsHtml}
-                                        <hr>
-                                        <h5 class="text-end">Total: ₹${o.total}</h5>
-                                    `;
+                                    <h6>Order #${o.id}</h6>
+                                    <p><strong>Member:</strong> ${o.user.first_name} ${o.user.last_name} (${o.user.email})</p>
+                                    <p><strong>Date:</strong> ${o.created_at}</p>
+                                    <p><strong>Status:</strong> <span class="badge bg-secondary">${o.status}</span></p>
+                                    <hr>
+                                    <h6>Items:</h6>
+                                    ${itemsHtml}
+                                    <hr>
+                                    <h5 class="text-end">Total: ₹${o.total}</h5>
+                                `;
                             $('#orderDetailsContent').html(html);
                         } else {
                             $('#orderDetailsContent').html('<p class="text-danger">Error fetching details.</p>');
@@ -156,7 +156,7 @@
             });
 
             // Update Status Modal
-            $('.updateStatusBtn').click(function () {
+            $(document).on('click', '.updateStatusBtn', function () {
                 let id = $(this).data('id');
                 $('#updateOrderId').val(id);
                 $('#updateStatusModal').modal('show');

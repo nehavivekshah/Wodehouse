@@ -219,6 +219,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/logout', [AdminController::class, 'logout']);
 
     // Admin Food Orders
+    Route::get('/admin/food-order-details/{id}', [AdminController::class, 'getFoodOrderDetails'])->name('admin.foodOrderDetails');
     Route::get('/admin/food-orders', [AdminController::class, 'foodOrders'])->name('admin.foodOrders');
     Route::post('/admin/food-order/update/{id}', [AdminController::class, 'updateOrderStatus'])->name('admin.foodOrder.update');
 

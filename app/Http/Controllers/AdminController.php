@@ -488,6 +488,16 @@ class AdminController extends Controller
         return view('backend.food_orders', compact('orders'));
     }
 
+    public function getFoodOrderDetails($id)
+    {
+        $order = \App\Models\FoodOrder::with(['user', 'items.foodItem'])->find($id);
+
+        if ($order) {
+            return response()->json(['success' => true, 'order' => $order]);
+        }
+        return response()->json(['success' => false, 'message' => 'Order not found']);
+    }
+
     public function updateOrderStatus(Request $request, $id)
     {
         $order = \App\Models\FoodOrder::findOrFail($id);

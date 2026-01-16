@@ -13,7 +13,7 @@
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card member-card h-100 shadow-sm border-0">
                     <div class="position-relative">
-                        <img src="{{ asset($event->image ?? 'images/event-placeholder.jpg') }}" class="card-img-top"
+                        <img src="{{ asset('/public/'.$event->image ?? 'images/event-placeholder.jpg') }}" class="card-img-top"
                             alt="{{ $event->title }}" style="height: 220px; object-fit: cover;">
                         @if($event->is_featured)
                             <span class="badge bg-primary position-absolute top-0 end-0 m-3">Featured</span>
@@ -66,7 +66,7 @@
         @forelse($pastEvents as $event)
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card member-card h-100 opacity-75 grayscale shadow-sm border-0">
-                    <img src="{{ asset($event->image ?? 'images/event-placeholder.jpg') }}" class="card-img-top"
+                    <img src="{{ asset('/public/'.$event->image ?? 'images/event-placeholder.jpg') }}" class="card-img-top"
                         alt="{{ $event->title }}" style="height: 200px; object-fit: cover; filter: grayscale(50%);">
 
                     <div class="card-body d-flex flex-column">

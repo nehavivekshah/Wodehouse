@@ -93,13 +93,28 @@ class MemberController extends Controller
                 $q->where('status', 1);
             }
         ])->where('status', 1)->get();
-
+    
         $orders = FoodOrder::with('items')
             ->where('user_id', auth()->id())
             ->latest()
             ->get();
-
-        return view('frontend.member.food', compact('categories', 'orders'));
+    
+        // ✅ Cart summary
+        $cartItems = auth()->user()
+            ->cartItems()
+            ->with('food')
+            ->get();
+    
+        $cartCount = $cartItems->sum('quantity');
+    
+        $cartTotal = $cartItems->sum(function ($item) {
+            return $item->quantity * $item->food->price;
+        });
+    
+        return view(
+            'frontend.member.food',
+            compact('categories', 'orders', 'cartCount', 'cartTotal')
+        );
     }
 
     public function cart()

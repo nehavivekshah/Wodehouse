@@ -18,23 +18,23 @@
                     <h3>Welcome Members</h3>
                     <p>Login to your account</p>
                     @if (session('success'))
-                        <div class="alert alert-success">
+                        <!--div class="alert alert-success">
                             {{ session('success') }}
-                        </div>
+                </div-->
                     @endif
                     @if (session('error'))
-                        <div class="alert alert-danger">
+                        <!--div class="alert alert-danger">
                             {{ session('error') }}
-                        </div>
+                </div-->
                     @endif
                     @if ($errors->any())
-                        <div class="alert alert-danger">
+                        <!--div class="alert alert-danger">
                             <ul>
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
-                        </div>
+                </div-->
                     @endif
                     <form action="{{ route('login') }}" method="post">
                         @csrf

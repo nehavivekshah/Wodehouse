@@ -4,7 +4,7 @@
     <div class="col-12">
         <div class="card member-card border-0 shadow-sm">
             {{-- Dynamic Event Banner --}}
-            <img src="{{ asset($event->image ?? 'images/default-event-large.jpg') }}" class="card-img-top"
+            <img src="{{ asset('/public/'.$event->image ?? 'images/default-event-large.jpg') }}" class="card-img-top"
                 alt="{{ $event->title }}" style="max-height: 400px; object-fit: cover;">
 
             <div class="card-body p-4">

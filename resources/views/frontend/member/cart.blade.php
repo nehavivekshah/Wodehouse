@@ -186,18 +186,23 @@
                         id: id
                     }, function (response) {
                         if (response.success) {
-                            $('#row-' + id).fadeOut(300, function () { $(this).remove(); });
-                            // Update Summary
+                            $('#row-' + id).fadeOut(300, function () {
+                                $(this).remove();
+                            });
+        
+                            // Update summary
                             updateSummary(response);
-
-                            // If cart empty, reload to show empty state
-                            if (response.cart_count == 0 || response.total == 0) {
-                                setTimeout(() => location.reload(), 500);
+        
+                            // Reload if cart empty
+                            if (response.cart_count === 0) {
+                                setTimeout(() => location.reload(), 300);
                             }
                         }
                     });
                 }
+            });
         }
+
 
         function updateSummary(response) {
             $('#summ-subtotal').text('₹ ' + parseFloat(response.subtotal).toFixed(2));

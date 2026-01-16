@@ -26,26 +26,32 @@
                 </thead>
                 <tbody>
                     @foreach($facilities as $facility)
-                    <tr id="facilityRow{{ $facility->id }}">
-                        <td>#{{ $facility->id }}</td>
-                        <td>{{ $facility->title }}</td>
-                        <td>{{ $facility->category }}</td>
-                        <td>
-                            <select class="form-control form-control-sm statusToggle" data-id="{{ $facility->id }}">
-                                <option value="1" {{ $facility->status == 1 ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ $facility->status == 0 ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </td>
-                        <td>{{ date('Y-m-d', strtotime($facility->created_at)) }}</td>
-                        <td>
-                            <a href="{{ route('admin.manageFacility', ['id'=>$facility->id]) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <a href="{{ route('admin.facilityAvailability', ['facility_id' => $facility->id]) }}"
-                               class="btn btn-sm btn-outline-success">
-                                Availability
-                            </a>
-                            <button class="btn btn-sm btn-outline-danger deleteFacilityBtn" data-id="{{ $facility->id }}">Delete</button>
-                        </td>
-                    </tr>
+                        <tr id="facilityRow{{ $facility->id }}">
+                            <td>#{{ $facility->id }}</td>
+                            <td>{{ $facility->title }}</td>
+                            <td>{{ $facility->category }}</td>
+                            <td>
+                                <select class="form-control form-control-sm statusToggle" data-id="{{ $facility->id }}">
+                                    <option value="1" {{ $facility->status == 1 ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ $facility->status == 0 ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </td>
+                            <td>{{ date('Y-m-d', strtotime($facility->created_at)) }}</td>
+                            <td>
+                                <a href="{{ route('admin.manageFacility', ['id' => $facility->id]) }}"
+                                    class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a href="{{ route('admin.facilityAvailability', ['facility_id' => $facility->id]) }}"
+                                    class="btn btn-sm btn-outline-success">
+                                    Availability
+                                </a>
+                                <a href="{{ route('admin.facilityBookings', ['facility_id' => $facility->id]) }}"
+                                    class="btn btn-sm btn-outline-info">
+                                    Bookings
+                                </a>
+                                <button class="btn btn-sm btn-outline-danger deleteFacilityBtn"
+                                    data-id="{{ $facility->id }}">Delete</button>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -56,53 +62,53 @@
 @include("backend.inc.member_footer")
 
 <script>
-$(document).ready(function () {
-    $('#facilitiesTable').DataTable();
+    $(document).ready(function () {
+        $('#facilitiesTable').DataTable();
 
-    // Delete Facility
-    $('.deleteFacilityBtn').click(function() {
-        let facilityId = $(this).data('id');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This will permanently delete the facility!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: 'var(--accent-color)',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '/admin/delete-facility/' + facilityId,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function(response){
-                        $('#facilityRow' + facilityId).remove();
-                        Swal.fire('Deleted!', 'Facility has been deleted.', 'success');
-                    },
-                    error: function(err){
-                        Swal.fire('Error!', 'Something went wrong.', 'error');
-                    }
-                });
-            }
+        // Delete Facility
+        $('.deleteFacilityBtn').click(function () {
+            let facilityId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will permanently delete the facility!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--accent-color)',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/admin/delete-facility/' + facilityId,
+                        type: 'DELETE',
+                        data: { _token: '{{ csrf_token() }}' },
+                        success: function (response) {
+                            $('#facilityRow' + facilityId).remove();
+                            Swal.fire('Deleted!', 'Facility has been deleted.', 'success');
+                        },
+                        error: function (err) {
+                            Swal.fire('Error!', 'Something went wrong.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Status toggle
+        $('.statusToggle').change(function () {
+            let facilityId = $(this).data('id');
+            let status = $(this).val();
+            $.ajax({
+                url: '/admin/toggle-facility-status/' + facilityId,
+                type: 'POST',
+                data: { _token: '{{ csrf_token() }}', status: status },
+                success: function (response) {
+                    Swal.fire('Success!', 'Facility status updated.', 'success');
+                },
+                error: function (err) {
+                    Swal.fire('Error!', 'Could not update status.', 'error');
+                }
+            });
         });
     });
-
-    // Status toggle
-    $('.statusToggle').change(function(){
-        let facilityId = $(this).data('id');
-        let status = $(this).val();
-        $.ajax({
-            url: '/admin/toggle-facility-status/' + facilityId,
-            type: 'POST',
-            data: { _token: '{{ csrf_token() }}', status: status },
-            success: function(response){
-                Swal.fire('Success!', 'Facility status updated.', 'success');
-            },
-            error: function(err){
-                Swal.fire('Error!', 'Could not update status.', 'error');
-            }
-        });
-    });
-});
 </script>

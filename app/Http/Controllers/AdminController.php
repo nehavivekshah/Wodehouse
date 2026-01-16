@@ -510,15 +510,19 @@ class AdminController extends Controller
     /* =======================
             FACILITY BOOKINGS
        ======================== */
-    public function facilityBookings()
+    public function facilityBookings(\Illuminate\Http\Request $request)
     {
         // Assuming 'bookings' table exists as per MemberController storeBooking
-        $bookings = DB::table('bookings')
+        $query = DB::table('bookings')
             ->join('users', 'bookings.user_id', '=', 'users.id')
             ->join('facilities', 'bookings.facility_id', '=', 'facilities.id')
-            ->select('bookings.*', 'users.first_name', 'users.last_name', 'users.email', 'facilities.title as facility_name')
-            ->orderBy('bookings.created_at', 'desc')
-            ->get();
+            ->select('bookings.*', 'users.first_name', 'users.last_name', 'users.email', 'facilities.title as facility_name');
+
+        if ($request->has('facility_id') && $request->facility_id) {
+            $query->where('bookings.facility_id', $request->facility_id);
+        }
+
+        $bookings = $query->orderBy('bookings.created_at', 'desc')->get();
 
         return view('backend.facility_bookings', compact('bookings'));
     }
